@@ -1,0 +1,63 @@
+body{
+     background-color: #f2f2f2;
+}
+
+header{
+     background-image: url("../images/lawbase.jpg");
+     height: 100vh;
+     background-position: top;
+     background-size: cover;
+}
+
+img{
+     display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+h5,h4{
+     font-family: 'Rubik', sans-serif;
+     text-align: center;
+}
+
+#user_name{
+     font-family: 'Slabo 27px', serif;
+     color: #FFFFFF;
+     font-size: 20px;
+     text-align: center;
+     cursor: pointer;
+     background: transparent;
+}
+
+#user_name:hover{
+     font-family: 'Slabo 27px', serif;
+     color: #FFFFFF;
+     font-weight: bold;
+     background: transparent;
+}
+
+#u__u{
+     padding-top: 120px;
+     width: auto;
+}
+
+#tabs a{
+     background: transparent;
+     text-decoration: none;
+     color: #FFFFFF;
+}
+
+#tabs a:hover{
+     font-size: 15px;
+     text-decoration: none;
+     color: #FFFFFF;
+}
+
+#transparent{
+     background-color: #222222;
+     height: auto;
+     width: auto;
+     opacity: 0.6;
+     border-radius: 5px;
+}

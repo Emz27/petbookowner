@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Required meta tags -->
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+     <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+     <!-- LINK CSS -->
+     <link href="css/list.css" rel="stylesheet">
+     <!-- LINK TO JS FUNCTIONS -->
+     <script src="js/script.js"></script>
+     <!-- jquery library -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <!-- FONTS -->
+     <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+     <!-- TITLE -->
+     <title>List of Lawyers</title>
+     <link rel="icon" type="image/png" href="images/lawbase.png">
+</head>
+<body>
+     <header>
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+                <div class="container">
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse_target">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="collapse_target">
+                    <ul class="header-nav navbar-nav mr-auto">
+                    </ul>
+                    <ul class="header-nav navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="#">Database</a></li>
+                        <li class="nav-item"><a class="nav-link" href="register">For Lawyers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="list">List</a></li>
+                    </ul>
+                </div>
+            </div>
+            </nav>
+
+<!-- ============================================================================
+==================== TABS =====================================================
+-->
+           <div id="u__u" class="container">
+                <div class="row">
+
+                     <div id="tabs" class="col-12">
+                                   <div id="transparent">
+                                    <ul class="nav nav-pills">
+                                         <!-- Nav tabs -->
+                                                   <ul class="nav nav-tabs">
+                                                   <li class="nav-item">
+                                                   <a class="nav-link active" data-toggle="tab" href="#luzon"><strong>LUZON</strong></a>
+                                                   </li>
+                                                   <li class="nav-item">
+                                                   <a class="nav-link" data-toggle="tab" href="#visayas"><strong>VISAYAS</strong></a>
+                                                   </li>
+                                                   <li class="nav-item">
+                                                   <a class="nav-link" data-toggle="tab" href="#mindanao"><strong>MINDANAO</strong></a>
+                                                   </li>
+                                                   </ul>
+                                                   <!-- Tab panes -->
+                                                   <div class="tab-content">
+                                                   <div id="luzon" class="container tab-pane active"><br>
+                                                        <h5 style="color: red;"><small>*click the name for more information*</small></h5>
+
+                                                        <!-- NAMES -->
+
+                                                        <div id="scroll">
+                                                                       <ul class="list-group list-group-flush">
+                                                                            <li id="user_name" class="list-group-item" data-toggle="modal" data-target="#myModal">SampleNameHere</li>
+                                                                            <li id="user_name" class="list-group-item" data-toggle="modal" data-target="#myModal">SampleNameHere</li>
+                                                                            <li id="user_name" class="list-group-item" data-toggle="modal" data-target="#myModal">SampleNameHere</li>
+                                                                       </ul>
+                                                        </div>
+                                                                       <!-- The Modal -->
+                                                                       <div class="modal fade" id="myModal">
+                                                                         <div class="modal-dialog">
+                                                                           <div class="modal-content">
+
+                                                                             <!-- Modal Header -->
+                                                                             <div class="modal-header">
+                                                                               <h4 id="user_name" class="modal-title">SampleNameHere</h4>
+                                                                               <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                             </div>
+
+                                                                             <!-- Modal body -->
+                                                                             <div class="modal-body">
+                                                                                  <!-- IMAGE THUMBNAIL -->
+                                                                                 <img class="center" src="images/qmark.png" style="height: 150px; width: 160px;"/>
+                                                                             <!-- INFOS -->
+                                                                             <h3><small>Admitted to bar:</small></h3>
+                                                                             <h6 id="admitted_to_bar"><small>2018</small></h6><br>
+
+                                                                             <h3><small>Specialty:</small></h3>
+                                                                             <h6 id="specialty"><small>SampleSpecialtyHere</small></h6>
+
+                                                                             <!-- Modal footer -->
+                                                                             <div class="modal-footer">
+                                                                               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                             </div>
+                                                                            </div>
+
+                                                                          </div>
+                                                                         </div>
+                                                                    </div>
+
+                                                   </div>
+                                                   <div id="visayas" class="container tab-pane fade"><br>
+                                                        <input type="text" name="search" placeholder="Search.."/>
+                                                        <h5 style="color: red;"><small>*click the name for more information*</small></h5>
+
+                                                        <!-- NAMES -->
+                                                                       <ul class="list-group list-group-flush">
+                                                                            <li id="user_name" class="list-group-item" data-toggle="modal" data-target="#myModal">SampleNameHere</li>
+                                                                            <li id="user_name" class="list-group-item" data-toggle="modal" data-target="#myModal">SampleNameHere</li>
+                                                                       </ul>
+
+                                                                       <!-- The Modal -->
+                                                                       <div class="modal fade" id="myModal">
+                                                                         <div class="modal-dialog">
+                                                                           <div class="modal-content">
+
+                                                                             <!-- Modal Header -->
+                                                                             <div class="modal-header">
+                                                                               <h4 id="user_name" class="modal-title">SampleNameHere</h4>
+                                                                               <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                             </div>
+
+                                                                             <!-- Modal body -->
+                                                                             <div class="modal-body">
+                                                                                  <!-- IMAGE THUMBNAIL -->
+                                                                                 <img class="center" src="images/qmark.png" style="height: 150px; width: 160px;"/>
+                                                                             <!-- INFOS -->
+                                                                             <h3><small>Admitted to bar:</small></h3>
+                                                                             <h6 id="admitted_to_bar"><small>2018</small></h6><br>
+
+                                                                             <h3><small>Specialty:</small></h3>
+                                                                             <h6 id="specialty"><small>SampleSpecialtyHere</small></h6>
+
+                                                                             <!-- Modal footer -->
+                                                                             <div class="modal-footer">
+                                                                               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                             </div>
+                                                                            </div>
+
+                                                                          </div>
+                                                                         </div>
+                                                                    </div>
+
+                                                   </div>
+                                                   <div id="mindanao" class="container tab-pane fade"><br>
+                                                        <h5 style="color: red;"><small>*click the name for more information*</small></h5>
+
+                                                        <!-- NAMES -->
+                                                                       <ul class="list-group list-group-flush">
+                                                                            <li id="user_name" class="list-group-item" data-toggle="modal" data-target="#myModal">SampleNameHere</li>
+                                                                            <li id="user_name" class="list-group-item" data-toggle="modal" data-target="#myModal">SampleNameHere</li>
+                                                                       </ul>
+
+                                                                       <!-- The Modal -->
+                                                                       <div class="modal fade" id="myModal">
+                                                                         <div class="modal-dialog">
+                                                                           <div class="modal-content">
+
+                                                                             <!-- Modal Header -->
+                                                                             <div class="modal-header">
+                                                                               <h4 id="user_name" class="modal-title">SampleNameHere</h4>
+                                                                               <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                             </div>
+
+                                                                             <!-- Modal body -->
+                                                                             <div class="modal-body">
+                                                                                  <!-- IMAGE THUMBNAIL -->
+                                                                                 <img class="center" src="images/qmark.png" style="height: 150px; width: 160px;"/>
+                                                                             <!-- INFOS -->
+                                                                             <h3><small>Admitted to bar:</small></h3>
+                                                                             <h6 id="admitted_to_bar"><small>2018</small></h6><br>
+
+                                                                             <h3><small>Specialty:</small></h3>
+                                                                             <h6 id="specialty"><small>SampleSpecialtyHere</small></h6>
+
+                                                                             <!-- Modal footer -->
+                                                                             <div class="modal-footer">
+                                                                               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                             </div>
+                                                                            </div>
+
+                                                                          </div>
+                                                                         </div>
+                                                                    </div>
+
+                                                   </div>
+                                                   </div>
+                                    </ul>
+                               </div>
+                     </div>
+                </div>
+           </div>
+
+       </header>
+
+
+ <!-- START OF DESIGN FOR NAME OF LAWYERS -->
+
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript">$(document).ready(function() {
+$('#example').DataTable();
+} );</script>
+</body>
+</html>

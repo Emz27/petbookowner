@@ -1,0 +1,176 @@
+@media screen and (max-width: 600px) {
+     h1{
+         font-size: 23px;
+     }
+
+     td{
+          font-size: 12px;
+     }
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.bg {
+    /* The image used */
+    background-image: url("../images/books.jpg");
+
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border: 1px solid #ddd;
+  color: white;
+}
+
+#myTable tr.header {
+  background-color: transparent;
+  border-bottom: 5px solid #FAE987;
+}
+
+ #myTable tr:hover {
+      background-color: #4B4B4B;
+      cursor: pointer;
+}
+/** **/
+#dada{
+     padding-top: 140px;
+}
+
+#scroll{
+     position: absolute;
+     height: 260px;
+     overflow-x: hidden;
+     overflow-y: scroll;
+     text-align: center;
+     width: 100%;
+}
+
+h5,h4{
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+}
+
+#user_name{
+    font-family: 'Slabo 27px', serif;
+    color: #FFFFFF;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    background: transparent;
+}
+
+#user_name:hover{
+    font-family: 'Slabo 27px', serif;
+    color: #FFFFFF;
+    font-weight: bold;
+    background: transparent;
+}
+
+#tabs a{
+    background: transparent;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+#tabs a:hover{
+    font-size: 15px;
+    text-decoration: none;
+    background-color: none;
+    border-bottom: 5px solid #FAE987;
+    color:  #FAE987;
+     -o-transition:.5s;
+     -ms-transition:.5s;
+     -moz-transition:.5s;
+     -webkit-transition:.5s;
+}
+
+#transparent{
+    height: 325px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+}
+
+.header-nav li a:hover{
+    text-decoration: none;
+    color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+    transition: all 0.3s ease-in;
+    padding-bottom: 5px;
+}
+
+#tabs{
+    height: auto;
+    width: 60%;
+}
+
+#tabs a{
+     background: transparent;
+     border-bottom: 5px solid transparent;
+     text-decoration: none;
+     color: #f2f2f2;
+}
+
+#tabs a:focus{
+     background-color: none;
+     border-bottom: 5px solid #FAE987;
+}
+
+input[type=text] {
+    height: 50px;
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+    width: 100%;
+}
+
+.header-nav li a:hover{
+    text-decoration: none;
+    color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+    transition: all 0.3s ease-in;
+    padding-bottom: 5px;
+}

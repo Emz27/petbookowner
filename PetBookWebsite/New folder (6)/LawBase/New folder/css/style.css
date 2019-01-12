@@ -1,0 +1,242 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+@font-face{
+    font-family:montserrat;
+    src:url("fonts/montserrat.ttf");
+}
+@font-face{
+    font-family:merriweather;
+    src:url("fonts/merriweather.ttf");
+}
+
+.main-header{
+    position: absolute;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    margin:0px;
+}
+
+.main-header h1{
+    color: white;
+    font-family: merriweather;
+}
+
+.header-button{
+    font-family: montserrat;
+}
+
+header{
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),url(img/header-img.jpg);
+    height: 100vh;
+    background-position: center;
+    background-size: cover;
+}
+
+.header-nav li{
+    display: inline-block;
+    margin-left: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.header-nav li a{
+    font-family: merriweather;
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.header-nav li a:hover{
+    text-decoration: none;
+    color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+    transition: all 0.3s ease-in;
+    padding-bottom: 5px;
+}
+
+.legal-areas{
+    text-align:center;
+}
+
+.legal-areas-buttons button{
+    width: 18vh;
+    height: 18vh;
+    font-size: 80%;
+    border: 1px black solid;
+}
+
+.section-buttons{
+    margin: 25px 0 25px 0;
+}
+
+.legal-areas-buttons button:hover{
+    width: 18vh;
+    height: 18vh;
+    font-size: 80%;
+    border: 1px gray solid;
+}
+
+.legal-areas-buttons button img{
+    align-content: top;
+}
+
+.legal-areas h1:after{
+    margin: 0 auto;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    width: 150px;
+    height: 2px;
+    background-color: #e61e22;
+    display: block;
+    content:" ";
+}
+
+.legal-areas-buttons .myButton{
+    display: inline-block;
+    height: 20vh;
+    width: 20vh;
+    border: 1px black solid;
+    opacity: 1;
+    transition: .5s ease;
+    backface-visibility: hidden;
+    margin-bottom: 10px;
+}
+
+
+
+.button-contents{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    position: relative;
+    top:22%;
+    font-size: .75em;
+}
+
+
+.text {
+    font-size: 16px;
+  }
+
+  .middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+  }
+
+  .middle .text button{
+      height: 10%;
+      width: 120px;
+      margin-bottom: 10px;
+      font-size: .65em;
+  }
+
+  .myButton:hover .middle {
+    opacity: 1;
+  }
+
+.myButton:hover {
+  background-color: #d9d9d9;
+}
+
+.center{
+    display: block;
+    text-align: center;
+    align-content: center;
+    float: right;
+}
+
+.scrollable{
+    overflow: auto;
+}
+
+.user-table a{
+    color: black;
+}
+
+.user-item:hover{
+    color: gray
+}
+
+.profile{
+    padding: 5px;
+    margin: 5px;
+}
+
+
+.alignleft {
+    float: left;
+    margin-right: 15px;
+}
+.alignright {
+    float: right;
+    margin-left: 15px;
+}
+.aligncenter {
+    display: block;
+    margin: 0 auto 15px;
+}
+a:focus { outline: 0 solid }
+img {
+    max-width: 100%;
+    height: auto;
+}
+.fix { overflow: hidden }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 0 15px;
+    font-weight: 700;
+}
+html,
+body { height: 100% }
+
+a {
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    color: #333;
+}
+a:hover { text-decoration: none }
+
+.title{
+    text-align: center;
+    color: white;
+}
+
+.regForm{
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),gray;
+    border-radius: 12px;
+}
+
+.regSection{
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),url(img/header-img.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+#registerTable{
+    width: 100%;
+  }
+
+#registerTable td{
+padding: 15px;
+width: 300px;
+vertical-align: top;
+}
+
+.postText{
+    border: 1px solid black;
+}

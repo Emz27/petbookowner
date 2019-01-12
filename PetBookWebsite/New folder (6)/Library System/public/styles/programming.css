@@ -1,0 +1,131 @@
+body {
+     background-color: #E6F7F8;
+}
+
+.navbar-header {
+     margin-left:  3px;
+}
+
+/** INSIDE CONT AFTER NAV **/
+
+#cont{
+     background-color: #b2b2b2;
+     border: 3px solid black;
+     border-radius: 50px;
+     opacity: 0.8;
+     height: 550px;
+     width: auto;
+}
+
+#title {
+     font-family: 'Bitter', serif;
+     margin-top: 40px;
+     text-align: center;
+     font-size: 40px;
+}
+
+#ProgrammingBook1{
+     height: 40px;
+     width: 50%;
+     margin-left: 280px;
+     margin-top: 10px;
+}
+
+#ProgrammingBook2{
+     height: 40px;
+     width: 50%;
+     margin-left: 280px;
+     margin-top: 10px;
+}
+
+#ProgrammingBook3{
+     height: 40px;
+     width: 50%;
+     margin-left: 280px;
+     margin-top: 10px;
+}
+
+#choice1{
+     font-family: 'Merriweather Sans', sans-serif;
+     text-align: center;
+     margin-top: 30px;
+}
+
+#choice2{
+     font-family: 'Merriweather Sans', sans-serif;
+     text-align: center;
+     margin-top: 30px;
+}
+
+#choice3{
+     font-family: 'Merriweather Sans', sans-serif;
+     text-align: center;
+     margin-top: 30px;
+}
+
+#submitbooks{
+     font-family: 'Merriweather Sans', sans-serif;
+     border-radius: 50px;
+     border: 2px solid #4E5D5F;
+     background-color: #A7EAF0;
+     height: 10%;
+     width: 50%;
+     margin-top: 50px;
+     margin-left: 280px;
+     font-size: 20px;
+}
+
+#submitbooks:hover{
+     font-family: 'Merriweather Sans', sans-serif;
+     border-radius: 50px;
+     border: 4px solid #4E5D5F;
+     font-size: 21px;
+}
+
+/** FOOTER **/
+
+.site-footer{
+     padding-top: 10px;
+}
+
+.bottom-footer{
+     border: 1px solid #b2b2b2;
+     color: #b2b2b2;
+     margin-top: 10px;
+}
+
+.footer-nav{
+     color: white;
+     text-decoration: none;
+     text-align: right;
+}
+
+.footer-nav li{
+     display: inline-block;
+}
+
+a{
+     color: #b2b2b2;
+     text-decoration: none;
+}
+
+a:hover{
+     text-decoration: none;
+}
+
+a:focus{
+     margin-left: 20px;
+     text-decoration: none;
+}
+
+/** LOGOUT **/
+
+#out{
+     margin-left: 1080px;
+}
+
+button{
+     border-radius: 50px;
+     border: 2px solid #97B9BC;
+     background-color: #97B9BC;
+}

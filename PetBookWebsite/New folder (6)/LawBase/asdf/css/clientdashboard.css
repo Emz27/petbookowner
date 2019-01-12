@@ -1,0 +1,222 @@
+@media screen and (max-width: 600px) {
+  #chatlog_{
+       width: 100%;
+       font-size: 9px;
+ }
+
+ #submit_button{
+      width: 30%;
+      font-size: 12px;
+}
+
+ #question_content{
+     font-size: 12px;
+ }
+
+ #lawyer_chat{
+      font-size: 12px;
+}
+
+#client_chat{
+     font-size: 12px;
+}
+
+h4{
+     font-size: 15px;
+}
+}
+
+body{
+     background-color: #f2f2f2;
+}
+
+p{
+     text-align: center;
+}
+
+.header-nav li a:hover{
+    text-decoration: none;
+    color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+    transition: all 0.3s ease-in;
+    padding-bottom: 5px;
+}
+
+#content{
+     margin-top: 100px;
+}
+
+#thumbnail{
+     display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 200px;
+    width: 200px;
+}
+
+#button_to_upload{
+     display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+#chatlog_{
+     display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+#container_que{
+     border-top: 1px solid black;
+     border-bottom: 1px solid black;
+     height: 250px;
+     width: auto;
+     margin-bottom: 20px;
+     padding: 10;
+     overflow-x: hidden;
+     overflow-y: auto;
+}
+
+/*                           */
+
+@font-face{
+    font-family:montserrat;
+    src:url("fonts/montserrat.ttf");
+}
+@font-face{
+    font-family:merriweather;
+    src:url("fonts/merriweather.ttf");
+}
+
+.center {
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   width: 50%;
+}
+
+.container_upload{
+     border: 1px solid black;
+     height: 220px;
+     width: 100%;
+     border-radius: 5px;
+     margin-left: auto;
+     margin-right: auto;
+     overflow: hidden;
+}
+
+#file{
+    overflow: hidden;
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 272px;
+}
+
+#submit{
+    border-left-width: 1px;
+}
+
+.btn-group{
+     padding-top: 10px;
+}
+
+#question_content{
+     font-family: 'Merriweather', serif;
+}
+
+#question_number{
+     font-family: 'Merriweather', serif;
+}
+
+h4{
+     font-family: 'Merriweather', serif;
+}
+/**
+CSS FOR MESSENGER
+**/
+
+.chatbox{
+     width: 100%;
+     height: 600px;
+     margin-bottom: 3px;
+     padding: 25px;
+     box-shadow: 0 3px #ccc;
+}
+
+.chatlogs{
+     padding: 10px;
+     width: 100%;
+     height: 450px;
+     overflow-x: hidden;
+     overflow-y: scroll;
+}
+
+.chat{
+     font-family: 'Bitter', serif;
+     display: flex;
+     flex-flow: row wrap;
+     align-items: flex-start;
+     margin-bottom: 10px;
+}
+
+.chat .user-photo{
+     width: 30px;
+     height: 30px;
+     background: #ccc;
+     border-radius: 50%;
+     overflow: hidden;
+}
+
+.chat .user-photo img{
+     width: 100%;
+}
+
+.chat .chat-message{
+     width: 70%;
+     height: auto;
+     padding: 15px;
+     margin-left: auto;
+     margin-right: auto;
+
+     border-radius: 10px;
+     color: #fff;
+     font-size: 18px;
+     overflow: hidden;
+}
+
+.lawyer .chat-message{
+     background: #BDC2FB;
+}
+
+.client .chat-message{
+     background: #FE787C;
+     order: -1;
+}
+
+.chat-form{
+     margin-top: 20px;
+     display: flex;
+     align-items: flex-start;
+}
+
+.chat-form textarea{
+     background: #fbfbfb;
+     width: 75%;
+     height: 50px;
+     border: 2px solid #eee;
+     border-radius: 8px;
+     resize: none;
+     padding: 10px;
+     font-size: 18px;
+     color: #333;
+}
+
+.chat-form textarea:focus{
+     background: #fff;
+}
+
+.chat-form button{
+     margin: 0 10px;
+}

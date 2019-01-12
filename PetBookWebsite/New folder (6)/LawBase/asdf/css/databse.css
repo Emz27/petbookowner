@@ -1,0 +1,44 @@
+body{
+     background-image: url("../images/court.jpg");
+     background-size: cover;
+}
+
+header{
+     margin-bottom: 100px;
+}
+
+h1{
+     font-family: 'Roboto Slab', serif;
+     font-weight: bold;
+     color: #f2f2f2;
+     font-size: 50px;
+     margin-top: 10px;
+     margin-bottom: 50px;
+}
+
+ul{
+     list-style-type: none;
+}
+
+.container_{
+     background-color: rgba(0, 0, 0, 0.4);
+     border: 5px solid #FAE987;
+     border-style: double;
+     height: auto;
+     width: auto;
+}
+
+.container_ a{
+     font-family: 'Roboto Slab', serif;
+     text-decoration: none;
+     font-size: 30px;
+     color: #f2f2f2;
+}
+
+.container a:hover{
+     color: #FAE987;
+     -o-transition:.5s;
+     -ms-transition:.5s;
+     -moz-transition:.5s;
+     -webkit-transition:.5s;
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+     <head>
+          <!-- Required meta tags -->
+               <meta charset="utf-8">
+          <!-- Bootstrap CSS -->
+               <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+               <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+               <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+          <!-- Link to CSS-->
+               <link rel="stylesheet" type="text/css" href="styles/programming.css">
+          <!--FONTS-->
+          <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
+          <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+          <link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
+          <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+          <link rel="icon" type="image/png" href="images/info_logo.png">
+          <title>Web Development Books</title>
+     </head>
+     <body>
+          <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+               <!--Logo Here -->
+               <div class="navbar-header">
+                    <img src="images/info_logo.png" height="50px" width="50px"></img>
+               </div>
+
+               <!--Dropdown Items -->
+                         <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lists of Books<span class="carret"></span></a>
+                              <ul class="dropdown-menu">
+                                   <li><a href="math.html">Math Books</a></li>
+                                   <li><a href="programming.html">Programming Books</a></li>
+                                   <li><a href="science.html">Science Books</a></li>
+                              </ul>
+                         </li>
+
+                         <!-- LOGOUT -->
+                              <form action="index.html">
+                              <li><button id="out" onclick="logout()">Logout</button></li>
+                              </form>
+          </nav>
+     <!-- CONTAINER AFTER NAV -->
+          <div class="container">
+               <div id="cont">
+          <!-- Choice 1-->
+                    <p id="title"><strong> Web Development Books </strong></p>
+                    <p id="choice1"><strong>Choice 1</strong></p>
+                    <select class="form-control" id="ProgrammingBook1">
+                         <option value = "Frontend Books">Frontend Books</option>
+                         <option value = "Front-End Web Development: The Big Nerd Ranch Guide">Front-End Web Development: The Big Nerd Ranch Guide</option>
+                         <option value = "Responsive Web Design with HTML5 and CSS3">Responsive Web Design with HTML5 and CSS3</option>
+                         <option value = "HTML & CSS">HTML & CSS</option>
+                         <option value = "JavaScript & jQuery">JavaScript & jQuery</option>
+                         <option value = "You Don’t Know JS: Up & Going">You Don’t Know JS: Up & Going</option>
+                         <option value = "Secrets of the JavaScript Ninja">Secrets of the JavaScript Ninja</option>
+                         <option value = "Backend Books">Backend Books</option>
+                         <option value = "PHP for the Web">PHP for the Web</option>
+                         <option value = "Learning PHP, MySQL & JavaScript">Learning PHP, MySQL & JavaScript</option>
+                    </select>
+          <!-- Choice 2-->
+                    <p id="choice2"><strong>Choice 2</strong></p>
+                    <select class="form-control" id="ProgrammingBook2">
+                         <option value = "None">None</option>
+                         <option value = "HTML AND CSS: DESIGN AND BUILD WEBSITES, BY JON DUCKETT">HTML AND CSS: DESIGN AND BUILD WEBSITES, BY JON DUCKETT</option>
+                         <option value = "JAVASCRIPT AND JQUERY: INTERACTIVE FRONT-END WEB DEVELOPMENT, BY JON DUCKETT">JAVASCRIPT AND JQUERY: INTERACTIVE FRONT-END WEB DEVELOPMENT, BY JON DUCKETT</option>
+                         <option value = "LEARNING WEB DESIGN: A BEGINNER’S GUIDE TO HTML, CSS, JAVASCRIPT, AND WEB GRAPHICS, BY JENNIFER NIEDERST ROBBINS">LEARNING WEB DESIGN: A BEGINNER’S GUIDE TO HTML, CSS, JAVASCRIPT, AND WEB GRAPHICS, BY JENNIFER NIEDERST ROBBINS</option>
+                         <option value = "DON’T MAKE ME THINK, REVISITED: A COMMON SENSE APPROACH TO WEB USABILITY, BY STEVE KRUG">DON’T MAKE ME THINK, REVISITED: A COMMON SENSE APPROACH TO WEB USABILITY, BY STEVE KRUG</option>
+                         <option value = "COMMUNICATING DESIGN: DEVELOPING WEB SITE DOCUMENTATION FOR DESIGN AND PLANNING, BY DAN M. BROWN">COMMUNICATING DESIGN: DEVELOPING WEB SITE DOCUMENTATION FOR DESIGN AND PLANNING, BY DAN M. BROWN</option>
+                         <option value = "UNIVERSAL PRINCIPLES OF DESIGN, REVISED AND UPDATED, BY WILLIAM LIDWELL, KRITINA HOLDEN & JILL BUTLER">UNIVERSAL PRINCIPLES OF DESIGN, REVISED AND UPDATED, BY WILLIAM LIDWELL, KRITINA HOLDEN & JILL BUTLER</option>
+                         <option value = "DESIGN FOR HACKERS: REVERSE ENGINEERING BEAUTY, BY DAVID KADAVY">DESIGN FOR HACKERS: REVERSE ENGINEERING BEAUTY, BY DAVID KADAVY</option>
+                         <option value = "Bootstrap / Foundation (A HTML/CSS Framework)">Bootstrap / Foundation (A HTML/CSS Framework)</option>
+                         <option value = "MongoDB (Database Based on JavaScript)">MongoDB (Database Based on JavaScript)</option>
+                         <option value = "Django and Flask (Based on Python)">Django and Flask (Based on Python)</option>
+                    </select>
+          <!-- Choice 3-->
+                    <p id="choice3"><strong>Choice 3</strong></p>
+                    <select class="form-control" id="ProgrammingBook3">
+                         <option value = "None">None</option>
+                         <option value = "CSS for Babies (Code Babies)">CSS for Babies (Code Babies)</option>
+                         <option value = "Javascript for Babies (Code Babies)">Javascript for Babies (Code Babies)</option>
+                         <option value = "Web Colors (Code Babies)">Web Colors (Code Babies)</option>
+                         <option value = "Hello App Inventor!: Android Programming for Kids and the Rest of Us">Hello App Inventor!: Android Programming for Kids and the Rest of Us</option>
+                         <option value = "CSS Secrets: Better Solutions to Everyday Web Design Problems">CSS Secrets: Better Solutions to Everyday Web Design Problems</option>
+                         <option value = "CSS: The Definitive Guide">CSS: The Definitive Guide</option>
+                         <option value = "CSS Pocket Reference: Visual Presentation for the Web">CSS Pocket Reference: Visual Presentation for the Web</option>
+                         <option value = "The Book of CSS3: A Developer’s Guide to the Future of Web Design">The Book of CSS3: A Developer’s Guide to the Future of Web Design</option>
+                         <option value = "Coding with JavaScript For Dummies">Coding with JavaScript For Dummies</option>
+                         <option value = "A Smarter Way to Learn JavaScript">A Smarter Way to Learn JavaScript</option>
+                    </select>
+          <!-- END OF CHOICES -->
+                         <button id="submitbooks" onclick="progSubmit()">Submit</button>
+
+               </div>
+          </div>
+          <!-- START OF FOOTER -->
+          <div class="navbar navbar-inverse navbar-fixed-bottom">
+          <footer class="site-footer">
+               <div class="container">
+               <div class="bottom-footer">
+                    <div class="col-md-5">&copy;Copyright Informatics Eastwood College 2018.</div>
+                    </div>
+               </div>
+          </div>
+          </footer>
+          </div>
+     </body>
+
+     <!-- FIREBASE -->
+                    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+                    <script>
+                      // Initialize Firebase
+                      var config = {
+                        apiKey: "AIzaSyCAqEFYXBK0uv-NG1upWQZFkoGS1mFhJxw",
+                        authDomain: "library-management-syste-d7593.firebaseapp.com",
+                        databaseURL: "https://library-management-syste-d7593.firebaseio.com",
+                        projectId: "library-management-syste-d7593",
+                        storageBucket: "library-management-syste-d7593.appspot.com",
+                        messagingSenderId: "952203535845"
+                      };
+                      firebase.initializeApp(config);
+                      var database = firebase.database();
+                    </script>
+
+                    <!-- LINK TO JS -->
+                         <script src="scripts/scripts.js"></script>
+                    <!-- Optional JavaScript -->
+                    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+                         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+                         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</html>

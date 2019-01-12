@@ -1,0 +1,140 @@
+<html>
+<head>
+     <!-- Required meta tags -->
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <!-- LINK BOOTSTRAP -->
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+     <!-- LINK CSS -->
+     <link href="css/richtext.css" rel="stylesheet">
+     <!-- FONTS -->
+     <title>LawBase</title>
+     <link rel="icon" type="image/png" href="images/lawbase.png">
+     <!--
+     ===================================================================================
+     ===================================================================================
+     START NG COPYPASTE MO TAS YUNG SA LINK CSS COPY PASTE MO NALANG SA CSS FILE NUNG LUMA
+     ===================================================================================
+     ===================================================================================
+     -->
+     <script>
+          window.addEventListener("load", function(){
+               var editor = theWYSIWYG.document;
+               editor.designMode = "on";
+
+               bold.addEventListener("click", function(){
+                    editor.execCommand("Bold", false, null);
+               },false);
+
+               italic.addEventListener("click", function(){
+                    editor.execCommand("Italic", false, null);
+               },false);
+
+               strike.addEventListener("click", function(){
+                    editor.execCommand("Strikethrough", false, null);
+               },false);
+
+               orderedList.addEventListener("click", function(){
+                    editor.execCommand("InsertOrderedList", false, "newOL" + Math.round(Math.random() * 1000));
+               },false);
+
+               unorderedList.addEventListener("click", function(){
+                    editor.execCommand("InsertunOrderedList", false, "newOL" + Math.round(Math.random() * 1000));
+               },false);
+
+               fontColor.addEventListener("change", function(event){
+                    editor.execCommand("ForeColor", false, event.target.value);
+               },false);
+
+               highlightColor.addEventListener("change", function(event){
+                    editor.execCommand("BackColor", false, event.target.value);
+               },false);
+
+               fontChanger.addEventListener("change", function(event){
+                    editor.execCommand("FontName", false, event.target.value);
+               },false);
+
+               fontSize.addEventListener("change", function(event){
+                    editor.execCommand("FontSize", false, event.target.value);
+               },false);
+
+               linkButton.addEventListener("click", function(){
+                    var url = prompt("Enter a URL: ", "http//");
+                    editor.execCommand("CreateLink", false,  url);
+               },false);
+
+               unlinkButton.addEventListener("click", function(){
+                    editor.execCommand("UnLink", false, null);
+               },false);
+
+               undoButton.addEventListener("click", function(){
+                    editor.execCommand("undo", false, null);
+               },false);
+
+               redoButton.addEventListener("click", function(){
+                    editor.execCommand("redo", false, null);
+               },false);
+
+          },false);
+     </script>
+</head>
+<body>
+     <div id="texteditor">
+          <div id="up">
+               <button id="bold" title="Bold"><strong>B</strong></button>
+               <button id="italic" title="Italic"><em>I</em></button>
+               <button id="strike" title="Strikethrough"><s>abc</s></button>
+               <button id="orderedList" title="Number List">(i)</button>
+               <button id="unorderedList" title="Bulleted List">&bull;</button>
+               <input type="color" id="fontColor" title="Change Font Color"/>
+               <input type="color" id="highlightColor" title="Highlight Text"/>
+               <select id="fontChanger">
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Consolas">Consolas</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Monospace">Monospace</option>
+                    <option value="Cursive">Cursive</option>
+                    <option value="Sans-serif">Sans-serif</option>
+                    <option value="Calibri">Calibri</option>
+               </select>
+               <select id="fontSize">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+               </select>
+               <button id="linkButton" title="Create Link">Link</button>
+               <button id="unlinkButton" title="Remove Link">Unlink</button>
+               <button id="undoButton" title="Undo">Undo</button>
+               <button id="redoButton" title="Redo">Redo</button>
+          </div>
+
+          <div id="_textarea_">
+               <iframe id="theWYSIWYG" name="theWYSIWYG" frameborder="0"></iframe>
+
+          </div>
+     </div>
+
+     <script>
+     //FONTS
+          var fonts = document.querySelectorAll("select#fontChanger > option");
+          for(var i = 0; i < fonts.length; i++){
+               fonts[i].style.fontFamily = fonts[i].value;
+          }
+     </script>
+
+     <!--
+     ===================================================================================
+     ===================================================================================
+     DULO NG ICOPY PASTE MO
+     ===================================================================================
+     ===================================================================================
+     -->
+</body>
+</html>

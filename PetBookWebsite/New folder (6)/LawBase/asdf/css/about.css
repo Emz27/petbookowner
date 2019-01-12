@@ -1,0 +1,142 @@
+@media screen and (max-width: 600px) {
+  .right {
+    font-size: 10px;
+  }
+}
+
+body{
+     background-color: #f2f2f2;
+}
+
+hr{
+     width: 50%;
+     border: 1px solid #585858;
+}
+
+code{
+     font-family: 'Slabo 27px', serif;
+     font-style: italic;
+     font-size: 45px;
+     color: #FAE987;
+}
+
+h2{
+     text-shadow: 2px 2px 10px black;
+     font-size: 40px;
+}
+
+h5{
+     text-align: center;
+}
+
+p{
+     font-family: 'PT Sans', sans-serif;
+     font-weight: bold;
+     color: #FAE987;
+}
+
+#first_text{
+     text-shadow: 2px 2px 10px black;
+     color: #f2f2f2;
+     font-family: 'Slabo 27px', serif;
+     font-weight: bold;
+     margin-top: 20px;
+     text-align: center;
+     font-size: 40px;
+}
+
+#second_text{
+     text-shadow: 2px 2px 5px black;
+     color: black;
+     font-family: 'Slabo 27px', serif;
+     font-weight: bold;
+     margin-top: 20px;
+     text-align: center;
+     font-size: 40px;
+}
+
+.carousel{
+     margin: 0 auto;
+     width: 100%;
+     text-align: center;
+     border-radius: 15px;
+     background-color: rgba(0, 0, 0, 0.4);
+     border: 4px solid #FAE987;
+     border-style: double;
+     height: auto;
+}
+
+#container_carousel{
+     margin-top: 50px;
+     margin-bottom: 50px;
+     padding: 35;
+     background-image: url("../images/HD.jpg");
+     background-size: cover;
+     background-repeat: no-repeat;
+}
+
+.carousel-inner{
+     height: 480px !important;
+}
+
+.carousel-inner img{
+     padding-top: 100;
+     padding-left: 20;
+     padding-right: 20;
+     max-width: 100%;
+     max-height: 100%;
+}
+
+.carousel-caption{
+     padding-top: 200;
+     padding-bottom: 0;
+     height: 200px;
+}
+
+#container_feedback{
+     background-color: white;
+     box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+     border-radius: 10px;
+     width: auto;
+     height: auto;
+     margin: 0 auto;
+}
+
+#container_feedback img{
+     width: 100%;
+     height: auto;
+     max-width: 100%;
+     max-height: 100%;
+     padding-left: 5;
+     padding-right: 5;
+}
+
+#container_feedback a{
+     text-align: center;
+}
+
+#container_feedback a:hover{
+     -o-transition:.5s;
+     -ms-transition:.5s;
+     -moz-transition:.5s;
+     -webkit-transition:.5s;
+}
+
+.right{
+     text-align: center;
+     padding-bottom: 10;
+}
+
+#container_cont{
+     margin-bottom: 30px;
+}
+
+#container_cont_cont a{
+     padding-right: 10;
+}
+
+#middle{
+     width: 136px;
+     height: 50px;
+     margin: 0 auto;
+}

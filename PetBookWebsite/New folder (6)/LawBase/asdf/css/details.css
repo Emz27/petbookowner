@@ -1,0 +1,41 @@
+@media screen and (max-width: 600px) {
+
+}
+
+body{
+     background-color: #f2f2f2;
+}
+
+header{
+     margin-bottom: 120px;
+}
+
+h1{
+     text-align: center;
+}
+
+.header-nav li a:hover{
+    text-decoration: none;
+    color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+    transition: all 0.3s ease-in;
+    padding-bottom: 5px;
+}
+
+.abc{
+     width: auto;
+     height: 100px;
+     padding-left: 150;
+     padding-top: 20;
+     padding-bottom: 20;
+     font-weight: bold;
+     font-family: 'Roboto', sans-serif;
+     margin-bottom: 20px;
+}
+
+.body{
+     border: 2px solid black;
+     border-radius: 15px;
+     width: auto;
+     height: 250px;
+}

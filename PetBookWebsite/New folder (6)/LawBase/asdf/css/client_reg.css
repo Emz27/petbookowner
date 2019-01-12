@@ -1,0 +1,52 @@
+* {
+     margin: 0;
+     padding: 0;
+}
+
+body {
+     background-image: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.7)),url("../images/abc.jpg");
+     background-position: top;
+     background-size: cover;
+}
+
+span{
+     color: red;
+}
+
+h2{
+     text-align: center;
+     color: #fff;
+}
+
+button:hover{
+     -o-transition:.5s;
+     -ms-transition:.5s;
+     -moz-transition:.5s;
+     -webkit-transition:.5s;
+     background-color: #262626;
+}
+
+#client_{
+     background-color: #222222;
+     background-color: rgba(0, 0, 0, 0.4);
+     width: auto;
+     height: auto;
+     margin-top: 130px;
+     padding: 25px;
+     padding-top: 50px;
+}
+
+#client_email{
+     width: 100%;
+     text-align: center;
+}
+
+#client_user{
+     width: 100%;
+     text-align: center;
+}
+
+#client_password{
+     width: 100%;
+     text-align: center;
+}

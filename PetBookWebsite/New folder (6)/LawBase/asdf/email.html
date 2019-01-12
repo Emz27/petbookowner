@@ -1,0 +1,56 @@
+<html>
+<head>
+     <!-- Required meta tags -->
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+     <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+     <!-- LINK CSS -->
+     <link href="css/email.css" rel="stylesheet">
+     <!-- LINK TO JS FUNCTIONS -->
+     <script src="js/script.js"></script>
+     <!-- jquery library -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <!-- FONTS -->
+     <link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+     <!-- TITLE -->
+     <title>Email Verification</title>
+     <link rel="icon" type="image/png" href="images/lawbase.png">
+</head>
+<body>
+     <div class="container">
+          <h6><strong>LawBasePH</strong>&nbsp;&nbsp;noreply@lawbaseph.com via sendgrid.net</h6>
+          <div class="jumbotron">
+               <div class="row">
+                    <div class="col-md-2">
+                    </div>
+     <!--Content-->
+                    <div class="col-md-8">
+                         <img src="images/lawbase.png" style="height: 200px; width: 200px;"/>
+                         <div class="container-content">
+                              <p id="user_name">Hello SampleName,</p>
+                              <p id="text">Welcome to <mark>LawBasePH!</mark> To start setting up your profile, please click the "Show Link" below and click the link to verify your account.</p>
+                              <div id="show" class="small">Show Link</div>
+                              <a href="#" id="link">samplelink.com.ph</a>
+                              <p id="nopad"> Thank you,<br><mark> LawBasePH </mark></p>
+                         </div>
+                         <div class="text-center">Copyright © 2018</div>
+                    </div>
+     <!-- End -->
+                    <div class="col-md-2">
+                    </div>
+               </div>
+          </div>
+     </div>
+
+     <script type="text/javascript">
+          $(document).ready(function() {
+          onload();
+          });
+     </script>
+</body>
+</html>

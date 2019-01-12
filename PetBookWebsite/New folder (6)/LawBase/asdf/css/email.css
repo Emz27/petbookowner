@@ -1,0 +1,75 @@
+body{
+     background-color: #0000;
+}
+
+.container{
+     width: 100%;
+     margin-top: 60px;
+}
+
+.jumbotron{
+     padding-top: 1px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+
+h6{
+     font-family: 'Arimo', sans-serif;
+}
+
+#user_name{
+     font-family: 'Roboto', sans-serif;
+     text-align: left;
+     padding: 10;
+     padding-top: 20;
+}
+
+#text{
+     font-family: 'Roboto', sans-serif;
+     text-align: left;
+     padding: 10;
+     padding-bottom: 0;
+}
+
+a{
+     padding: 10;
+     padding-top: 0;
+     display: none;
+}
+
+#show{
+     padding: 10;
+     padding-bottom: 0;
+     padding-top: 0;
+}
+
+#show:hover{
+     cursor: pointer;
+     color: blue;
+}
+
+#nopad{
+     font-family: 'Roboto', sans-serif;
+     padding-top: 40;
+     padding-left: 10;
+}
+
+mark{
+     padding: 0;
+}
+
+.container-content{
+     border: 2px solid #E4EAEA;
+     width: 100%;
+     background-color: white;
+     height: 300px;
+     padding-left: 10px;
+}

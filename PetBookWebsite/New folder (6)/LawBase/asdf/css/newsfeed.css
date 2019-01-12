@@ -1,0 +1,99 @@
+body{
+     background-color: #F2F2F2;
+}
+
+hr{
+     width: 40%;
+}
+
+textarea{
+     resize: none;
+}
+
+p{
+     margin: 0;
+}
+
+img{
+     padding: 10px;
+}
+
+#text_container{
+     border: none;
+     border-radius: 5px;
+     padding: 10;
+     opacity: 0.8;
+}
+
+.btn-circle {
+    font-weight: bold;
+    font-size: 12px;
+    padding: 6px 15px;
+    border-radius: 20px;
+}
+
+#reply{
+     margin-top: 7px;
+}
+
+.text_align_center{
+     font-family: 'Rubik', sans-serif;
+     padding-bottom: 13px;
+     text-align: center;
+}
+
+.field{
+     font-family: 'Rubik', sans-serif;
+     margin-left: 65px;
+     float: left;
+     text-align: left;
+}
+
+#thumbnail{
+     height: 200px;
+     width: 200px;
+     padding: 10px;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+span{
+     text-align: center;
+}
+
+h4{
+     font-family: 'Bitter', serif;
+}
+
+#id:hover{
+     width: 78%;
+}
+
+#btn{
+     display: none;
+     margin-left: 40px;
+}
+
+.container_ a:hover{
+     background-color: blue;
+}
+
+.container_upload{
+     border: 1px solid black;
+     height: 220px;
+     width: 100%;
+     border-radius: 5px;
+     margin-left: auto;
+     margin-right: auto;
+     overflow: hidden;
+}
+
+.btn-group{
+     padding-left: 65px;
+     padding-top: 10px;
+}

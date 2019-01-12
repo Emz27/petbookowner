@@ -1,0 +1,36 @@
+body{
+     background-color: #f2f2f2;
+}
+
+img{
+     display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+hr{
+     width: 40%;
+}
+
+h1,h6,h5,h4,h3,span{
+     font-family: 'Rubik', sans-serif;
+     text-align: center;
+}
+
+#user_name{
+     font-family: 'Slabo 27px', serif;
+     font-size: 20px;
+     text-align: center;
+     cursor: pointer;
+}
+
+#user_name:hover{
+     font-family: 'Slabo 27px', serif;
+     color: #444444;
+     font-weight: bold;
+}
+
+#__{
+     margin-top: 100px;
+}
