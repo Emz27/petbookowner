@@ -79,7 +79,12 @@ p, #quote{
   width: 250px;
 }
 
-#page-content-wrapper {
+#page-content-wrapper  {
+ font-family: 'Acme', sans-serif;
+  font-size: 20px;
+  text-shadow: 0px 4px 3px rgba(0,0,0,0),
+               0px 8px 13px rgba(0,0,0,0.5),
+               0px 18px 23px rgba(0,0,0,0);
   width: 100%;
   position: absolute;
   padding: 15px;
@@ -211,4 +216,43 @@ p, #quote{
   display: none;
   background-color: #262626;
   padding-left: 8px;
+}
+
+#menu-toggle,#out{
+     font-family: 'Poppins', sans-serif;
+}
+
+/* PARALLAX EFFECT */
+.parallax {
+  /* The image used */
+  background-image: url("../images/dog.jpg");
+
+  /* Set a specific height */
+  min-height: 700px;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  padding: 0;
+  margin: 0;
+}
+
+.parallax2 {
+  /* The image used */
+  background-image: url("../images/cat.jpg");
+
+  /* Set a specific height */
+  min-height: 600px;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  padding: 0;
+  margin: 0;
 }

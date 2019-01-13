@@ -12,6 +12,9 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Acme" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
   <!-- Title -->
   <link rel="shortcut icon" href="images/pet.jpg" />
   <title> Pet Book </title>
@@ -115,14 +118,13 @@
                                 </a>
                               </li>
                               <li>
-                                  <a href="createpetshop.html">
+                                  <div class="active">
                                     Create a Petshop
-                               </a>
+                                    </div>
                               </li>
                               <li>
-                                  <div class="active">
+                                  <a href="Petshoplist.html">
                                     Lists of Petshop
-                                 </div>
                               </li>
                               <li>
                                   <a href="#">About PetBook</a>
@@ -130,17 +132,98 @@
                           </ul>
                       </div>
                       <!-- /#sidebar-wrapper -->
-
+                      <div class="parallax">
+                      </div>
                       <!-- Page Content -->
-                      <div id="page-content-wrapper">
-                          <div class="container">
 
-                              <button id="menu-toggle" onclick="toggle()" class="btn btn-secondary">Open Menu</button>
-                              <button id="out" onclick="logout()" class="btn btn-secondary">Logout</button>
+                      <div id="page-content-wrapper">
+                          <div class="container-fluid">
+                              <!-- START OF REGISTRATION -->
+                              <div class="row">
+                                   <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <button id="menu-toggle" onclick="toggle()" class="btn btn-secondary">Open Menu</button>
+                                        <button id="out" onclick="logout()" class="btn btn-secondary">Logout</button>
+                                   </div>
+
+                                   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+                                        <div class="form-group">
+                                          <label for="firstname">First Name: (Owner)</label>
+                                          <input type="text" class="form-control" id="firstname">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="lastname">Last Name: (Owner)</label>
+                                          <input type="text" class="form-control" id="lastname">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="contact">Contact #: (Owner)</label>
+                                          <input type="number" class="form-control" id="contact">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="address">Address: (Owner)</label>
+                                          <input type="text" class="form-control" id="address">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="e_mail">Email Address</label>
+                                          <input type="email" class="form-control" id="e_mail">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="comp_name">Enter your Shopname:</label>
+                                          <input type="text" class="form-control" id="comp_name">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="comp_street">Enter your Petshop's Street:</label>
+                                          <input type="text" class="form-control" id="comp_street">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="comp_loc">Enter your Pet Shop's Barangay</label>
+                                            <select class="form-control" id="comp_loc">
+                                              <option value="" disabled selected><strong>District 1 Pasig</strong></option>
+                                              <option>Bagong Ilog</option>
+                                              <option>Bagong Katipunan</option>
+                                              <option>Bambang</option>
+                                              <option>Buting</option>
+                                              <option>Caniogan</option>
+                                              <option>Kalawaan</option>
+                                              <option>Kapasigan</option>
+                                              <option> Kapitolyo</option>
+                                              <option>Malinao</option>
+                                              <option>Oranbo</option>
+                                              <option>Palatiw</option>
+                                              <option>Pineda</option>
+                                              <option>Sagad</option>
+                                              <option>San Antonio</option>
+                                              <option>San Joaquin</option>
+                                              <option>San Jose</option>
+                                              <option>San Nicolas (Poblacion)</option>
+                                              <option>San Miguel</option>
+                                              <option>Santa Cruz</option>
+                                              <option>Santa Rosa</option>
+                                              <option>Santo Tomas</option>
+                                              <option>Sumilang</option>
+                                              <option>Ugong</option>
+                                              <option value="" disabled selected><strong>District 2 Pasig</strong></option>
+                                              <option>Dela Paz</option>
+                                              <option>Manggahan</option>
+                                              <option>Maybunga</option>
+                                              <option>Pinagbuhatan</option>
+                                              <option>Rosario</option>
+                                              <option>Santa Lucia</option>
+                                              <option>Santolan</option>
+                                            </select>
+                                         </div>
+                                        <button id="submit" type="button" onclick="writeUserData()" class="btn btn-lg btn-primary ">Submit</button>
+                                   </div>
+
+                                   <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                   </div>
+                              </div>
                           </div>
                       </div>
                       <!-- /#page-content-wrapper -->
 
+                      <div class="parallax2">
+                      </div>
                       <!-- END OF THE -->
                   </div>
                   <!-- /#wrapper -->

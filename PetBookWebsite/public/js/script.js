@@ -26,7 +26,11 @@ function login(){
                              var errorCode = error.code;
                              var errorMessage = error.message;
                              window.alert("Error : " + errorMessage);
-                                                           });             
+                                                           });
+
+                                                           setTimeout(function() {
+                                                                window.location='index.html'
+                                                           }, 2500);
 }
 
 function logout(){
@@ -44,41 +48,27 @@ function writeUserData(){
                                 var database = firebase.database();
                                 var fname = document.getElementById("firstname").value;
                                 var lname = document.getElementById("lastname").value;
+                                var lname = document.getElementById("contact").value;
                                 var address = document.getElementById("address").value;
                                 var email = document.getElementById("e_mail").value;
-                                var password = document.getElementById("password_").value;
-                                var confirm_password = document.getElementById("confirm_password").value;
-
-
-                                if(email == "" || password_ == "" || confirm_password == "" || fname == "" || lname == "" || address == ""){
+                                var comp_name = document.getElementById("comp_name").value;
+                                var comp_street = document.getElementById("comp_street").value;
+                                var comp_loc = document.getElementById("comp_loc").value;
+                                if(email == "" ||  fname == "" || lname == "" || contact == "" || address == "" || comp_name == "" || comp_street == "" || comp_loc == ""){
                                 window.alert("Please fill up all required informations");
                                 }
-                                else if(password.length<6){
-                                     alert("Password must be atleast 6 characters")
-                                }
-                                else if(password != confirm_password){
-                                     window.alert("Password does not match");
-                                }
-                                else if(password == confirm_password){
+                                else{
                                      var data =
                                      {
                                      fname: fname,
                                      lname: lname,
+                                     contact: contact,
                                      address: address,
                                      email: email,
-                                     password: password
+                                     comp_name: comp_name,
+                                     comp_street: comp_street,
+                                     comp_loc: comp_loc,
                                      }
-
-
-
-                                     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-                                     // Handle Errors here.
-                                     var errorCode = error.code;
-                                     var errorMessage = error.message;
-                                      window.alert("Error : " + errorMessage);
-
-                                     // ...
-                                     });
 
 
                                      database.ref("users").orderByChild("e_mail").equalTo(email).once('value', function(snapshot) {
@@ -93,6 +83,9 @@ function writeUserData(){
                                      else{
                                           database.ref("users").push(data);
                                           window.alert("Welcome "+fname+" "+lname+". You are successfully registered!");
+                                          setTimeout(function() {
+                                               window.location='index.html'
+                                          }, 2500);
                                      }
                                      });
 
