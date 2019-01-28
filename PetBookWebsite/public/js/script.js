@@ -1,30 +1,4 @@
 
-var config = {
-  apiKey: "AIzaSyCHUtKxC3ywtoHHj1QVuZVG6FliyR-u4pw",
-  authDomain: "petbook-d35a1.firebaseapp.com",
-  databaseURL: "https://petbook-d35a1.firebaseio.com",
-  projectId: "petbook-d35a1",
-  storageBucket: "petbook-d35a1.appspot.com",
-  messagingSenderId: "397515456686"
-};
-// Initialize Firebase
-
-try {
-     firebase.initializeApp(config)
-} catch (err) {
-     // we skip the "already exists" message which is
-     // not an actual error when we're hot-reloading
-     if (!/already exists/.test(err.message)) {
-     console.error('Firebase initialization error', err.stack)
-     }
-}
-var db = firebase.firestore();
-
-db.settings({
-  timestampsInSnapshots: true
-});
-
-
 
 function toggle(){
                                 $("#menu-toggle").on('click', function() {
@@ -32,24 +6,17 @@ function toggle(){
                                 });
 }
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-              //User is signed in.
-              document.getElementById("not_loggedin").style.display = "none";
-              document.getElementById("when_loggedin").style.display = "block";
-  } else {
-              //No user is signed in.
-              document.getElementById("not_loggedin").style.display = "block";
-              document.getElementById("when_loggedin").style.display = "none";
-  }
-});
 
 function login(){
 
                  var emailAddress = document.getElementById("usr").value;
                  var password = document.getElementById("pwd").value;
 
-                      firebase.auth().signInWithEmailAndPassword(emailAddress, password).catch(function(error) {
+                      firebase.auth().signInWithEmailAndPassword(emailAddress, password)
+                      then(function(){
+                        firebase.firestore().collection("users")
+                      })
+                      .catch(function(error) {
                            // Handle Errors here.
                              var errorCode = error.code;
                              var errorMessage = error.message;
@@ -72,38 +39,37 @@ function logout(){
 }
 
 async function writeUserData(){
-
-                                var fname = document.getElementById("firstname").value;
-                                var lname = document.getElementById("lastname").value;
-                                var contact = document.getElementById("contact").value;
-                                var address = document.getElementById("address").value;
-                                var email = document.getElementById("e_mail").value;
-                                var comp_name = document.getElementById("comp_name").value;
-                                var comp_street = document.getElementById("comp_street").value;
-                                var comp_loc = document.getElementById("comp_loc").value;
-                                if(email == "" ||  fname == "" || lname == "" || contact == "" || address == "" || comp_name == "" || comp_street == "" || comp_loc == ""){
-                                window.alert("Please fill up all required informations");
-                                }
-                                else{
-
-                                     var data =
-                                     {
-                                     fname: fname,
-                                     lname: lname,
-                                     contact: contact,
-                                     address: address,
-                                     email: email,
-                                     comp_name: comp_name,
-                                     comp_street: comp_street,
-                                     comp_loc: comp_loc,
-                                     }
-
-                                     await db.collection("petshops").add({
-                                          ...data,
-                                          groomers: []
-                                     })
-
-                                }
+  var fname = document.getElementById("firstname").value;
+  var lname = document.getElementById("lastname").value;
+  var contact = document.getElementById("contact").value;
+  var address = document.getElementById("address").value;
+  var email = document.getElementById("e_mail").value;
+  var comp_name = document.getElementById("comp_name").value;
+  var comp_street = document.getElementById("comp_street").value;
+  var comp_loc = document.getElementById("comp_loc").value;
+  
+  if(email == "" ||  fname == "" || lname == "" || contact == "" || address == "" || comp_name == "" || comp_street == "" || comp_loc == ""){
+  window.alert("Please fill up all required informations");
+  }
+  else{
+    var data = {
+      fname: fname,
+      lname: lname,
+      contact: contact,
+      address: address,
+      email: email,
+      type: "owner", 
+      status: "inactive", 
+    }
+    var user = await firebase.firestore().collection("users").add(data);
+    await firebase.firestore().collection("petshops").add({
+      ownerDocId: user.id,
+      name: comp_name,
+      street: comp_street,
+      barangay: comp_loc, 
+      status: "inactive", 
+    })
+  }
 }
 
 

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <!-- alertify -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/alertify.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/themes/default.css" />
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/loading.css">
+  
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <!-- Title -->
+    <link rel="shortcut icon" href="images/pet.jpg" />
+    <title> Pet Book </title>
+    <style>
+      
+    </style>
+  </head>
+<body>
+<header>
+</header>
+<!-- HEADER , JUMBOTROB -->
+
+<!-- *****************************************************************************************************
+************************************************************************************************************
+******************************START OF THE LOGGED IN -->
+<div id="not_loggedin">
+<div class="container-fluid">
+  <div id="jumb" class="jumbotron text-center">
+    <h1 id="title">Welcome to Pet Book</h1></break>
+    <p id="quote"><strong><i>An animal's eyes have the power to speak a great language.</i></strong></p>
+    <img src="images/petsfortitle.png" style="height: 300px; width: 500px;"/>
+  </div>
+</div>
+<!-- AFTER HEADER, JUMBOTRON-->
+<div class="container">
+  <div class="row">
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+      </div>
+
+      <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+
+        <p>
+           Here you can build and start your Pet Shop in just a few clicks! And then you can offer both hygienic care (such as pet cleaning) and esthetic services (such as cat and dog grooming).
+        </p>
+        <!-- Login Modal -->
+        <!-- Trigger the modal with a button -->
+        <button id="modal" type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#log">Login Now</button>
+        <!-- Modal -->
+              <div class="modal fade" id="log" role="dialog">
+                <div class="modal-dialog modal-lg">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">LOGIN ADMIN ACCOUNT</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <form id="loginForm">
+                      <fieldset>
+                        <div class="modal-body">
+                          <div class="form-group">
+                            <label for="e-mail">Email address:</label>
+                            <input type="text" class="form-control" id="usr" autofocus>
+                          </div>
+                          <div class="form-group">
+                            <label for="password_">Password:</label>
+                            <input type="password" class="form-control" id="pwd">
+                          </div>
+                          <input type="submit" class="btn btn-primary btn-lg" value="submit" />
+                        </div>
+                      </fieldset>
+                    </form>
+                    
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+             </div>
+           </br>
+      </div>
+
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+      </div>
+
+  </div>
+</div>
+</div>
+
+<!-- *****************************************************************************************************
+************************************************************************************************************
+******************************START OF THE WHEN LOGGED IN -->
+<div id="when_loggedin">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand active">
+              HOME
+            </li>
+            <li>
+                <a href="createpetshop.html">
+                  Create a Petshop
+            </li>
+            <li>
+                <a href="#">
+                  Lists of Petshop
+            </li>
+            <li>
+                <a href="#">About PetBook</a>
+            </li>
+        </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container">
+            <h1>Welcome to Petbook!</h1>
+            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+            Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+            Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,
+            venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.
+            Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu,
+            consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+            Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue.
+            Curabitur ullamcorper ultricies nisi.</p>
+            <button id="menu-toggle" onclick="toggle()" class="btn btn-secondary">Open Menu</button>
+            <button id="out" onclick="logout()" class="btn btn-secondary">Logout</button>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+    <!-- END OF THE -->
+  </div>
+  <!-- /#wrapper -->
+
+</div>
+
+
+
+  <!-- jquery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- jquery validation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js" ></script>
+  <!-- bootstrap -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- firebase -->
+  <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
+  <!-- notificaton -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/alertify.min.js"></script>
+  
+  
+  <script src="js/init.js"></script>
+  <script>
+    
+  </script>
+</body>
+</html>

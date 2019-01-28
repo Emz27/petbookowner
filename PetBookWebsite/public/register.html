@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <!-- alertify -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/alertify.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/themes/default.css" />
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/loading.css">
+  
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <!-- Title -->
+    <link rel="shortcut icon" href="images/pet.jpg" />
+    <title> Pet Book </title>
+    <style>
+      
+    </style>
+  </head>
+<body>
+<header>
+</header>
+<!-- HEADER , JUMBOTROB -->
+
+<!-- *****************************************************************************************************
+************************************************************************************************************
+******************************START OF THE LOGGED IN -->
+<div id="not_loggedin">
+  <div class="container-fluid">
+    <div id="jumb" class="jumbotron text-center">
+      <h1 id="title">Welcome to Pet Book</h1></break>
+      <p id="quote"><strong><i>An animal's eyes have the power to speak a great language.</i></strong></p>
+      <img src="images/petsfortitle.png" style="height: 300px; width: 500px;"/>
+    </div>
+  </div>
+</div>
+
+<!-- *****************************************************************************************************
+************************************************************************************************************
+******************************START OF THE WHEN LOGGED IN -->
+<div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand"><a href="index.html">
+                  HOME
+                  </a>
+                </li>
+                <li>
+                    <div class="active">
+                      Create a Petshop
+                      </div>
+                </li>
+                <li>
+                    <a href="Petshoplist.html">
+                      Lists of Petshop
+                </li>
+                <li>
+                    <a href="#">About PetBook</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <div class="parallax">
+        </div>
+        <!-- Page Content -->
+
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <!-- START OF REGISTRATION -->
+                <form id="registerForm">
+                    <fieldset>
+                <div class="row">
+
+                      <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 m-auto">
+                          <div class="form-group">
+                            <label for="username">Username </label>
+                            <input type="text" class="form-control" id="username" name="username" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="password">Password </label>
+                            <input type="password" class="form-control" id="password" name="password" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="confirmPassword">Confirm Password </label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="firstname">First Name: (Owner)</label>
+                            <input type="text" class="form-control" id="firstname" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="lastname">Last Name: (Owner)</label>
+                            <input type="text" class="form-control" id="lastname" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="contact">Contact #: (Owner)</label>
+                            <input type="number" onkeydown="javascript: return event.keyCode == 69 ? false : true" class="form-control" id="contact" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="address">Address: (Owner)</label>
+                            <input type="text" class="form-control" id="address" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="e_mail">Email Address</label>
+                            <input type="email" class="form-control" id="e_mail" name="email" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="comp_name">Enter your Shopname:</label>
+                            <input type="text" class="form-control" id="comp_name" name="shopName" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="comp_street">Enter your Petshop's Street:</label>
+                            <input type="text" class="form-control" id="comp_street" required />
+                          </div>
+                          <div class="form-group">
+                              <label for="comp_loc">Enter your Pet Shop's Barangay</label>
+                              <select class="form-control" id="comp_loc" required>
+                                <option value="" disabled selected><strong>District 1 Pasig</strong></option>
+                                <option>Bagong Ilog</option>
+                                <option>Bagong Katipunan</option>
+                                <option>Bambang</option>
+                                <option>Buting</option>
+                                <option>Caniogan</option>
+                                <option>Kalawaan</option>
+                                <option>Kapasigan</option>
+                                <option> Kapitolyo</option>
+                                <option>Malinao</option>
+                                <option>Oranbo</option>
+                                <option>Palatiw</option>
+                                <option>Pineda</option>
+                                <option>Sagad</option>
+                                <option>San Antonio</option>
+                                <option>San Joaquin</option>
+                                <option>San Jose</option>
+                                <option>San Nicolas (Poblacion)</option>
+                                <option>San Miguel</option>
+                                <option>Santa Cruz</option>
+                                <option>Santa Rosa</option>
+                                <option>Santo Tomas</option>
+                                <option>Sumilang</option>
+                                <option>Ugong</option>
+                                <option value="" disabled selected><strong>District 2 Pasig</strong></option>
+                                <option>Dela Paz</option>
+                                <option>Manggahan</option>
+                                <option>Maybunga</option>
+                                <option>Pinagbuhatan</option>
+                                <option>Rosario</option>
+                                <option>Santa Lucia</option>
+                                <option>Santolan</option>
+                              </select>
+                            </div>
+                          <input type="submit" class="btn btn-lg btn-primary " value="Submit" />
+                      </div>
+                </div>
+                </fieldset>
+                </form>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+        <div class="parallax2">
+        </div>
+        <!-- END OF THE -->
+    </div>
+    <!-- /#wrapper -->
+
+
+<!-- jquery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- jquery validation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js" ></script>
+<!-- bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- firebase -->
+<script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
+<!-- notificaton -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/alertify.min.js"></script>
+
+
+<script src="js/init.js"></script>
+<script>
+  jQuery.validator.addMethod("isUsernameAvailable", async function(value, element) {
+    console.log("test username");
+    var userResults = await firebase.firestore().collection("users").where("username", "==", value).get();
+    console.log(userResults)
+    return this.optional(element) || userResults.docs.length == 0;
+  }, "Username not available");
+  jQuery.validator.addMethod("isEmailAvailable", async function(value, element) {
+    var userResults = await firebase.firestore().collection("users").where("email", "==", value).get();
+    return this.optional(element) || userResults.docs.length == 0;
+  }, "Email not available");
+  jQuery.validator.addMethod("isShopNameAvailable", async function(value, element) {
+    var shopResults = await firebase.firestore().collection("petshops").where("shopName", "==", value).get();
+    return this.optional(element) || shopResults.docs.length == 0;
+  }, "Shop Name not available");
+
+  jQuery.validator.addMethod("isConfirmPasswordValid",function(value, element) {
+
+    var password = $("#password").val();
+    console.log("password: "+ password);
+    console.log("confirmpassword: "+ value);
+    return this.optional(element) || value == password;
+  }, "Password and Confirm Password does not match");
+
+
+  $(document).ready(function(){
+
+    $("#registerForm").validate({
+      rules: {
+        username: "isUsernameAvailable",
+        confirmPassword: "isConfirmPasswordValid",
+        email: "isEmailAvailable",
+        shopName: "isShopNameAvailable", 
+      },
+      errorPlacement: function(label, element) {
+        label.addClass('text-danger');
+        label.insertAfter(element);
+      },
+      wrapper: 'span'
+    });
+
+    $("#registerForm").submit(async function(e){
+      e.preventDefault();
+      var username = $("#username").val();
+      var password = $("#password").val();
+      var confirmPassword = $("#confirmPassword").val();
+      var fname = document.getElementById("firstname").value;
+      var lname = document.getElementById("lastname").value;
+      var contact = document.getElementById("contact").value;
+      var address = document.getElementById("address").value;
+      var email = document.getElementById("e_mail").value;
+      var comp_name = document.getElementById("comp_name").value;
+      var comp_street = document.getElementById("comp_street").value;
+      var comp_loc = document.getElementById("comp_loc").value;
+
+      if($("#registerForm").valid()){
+        var data = {
+          username: username,
+          password: password,
+          fname: fname,
+          lname: lname,
+          contact: contact,
+          address: address,
+          email: email,
+          type: "owner", 
+          status: "inactive", 
+        }
+        var user = await firebase.firestore().collection("users").add(data);
+        await firebase.firestore().collection("petshops").add({
+          ownerDocId: user.id,
+          name: comp_name,
+          street: comp_street,
+          barangay: comp_loc, 
+          status: "inactive", 
+        })
+      }
+    })
+  });
+</script>
+</body>
+</html>
