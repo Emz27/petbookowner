@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 
 <head>
-    <!-- session checker -->
-    <script src="/js/session_check.js"></script>
+    <!-- firebase -->
+<script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
+    <script src="/js/init.js"></script>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -173,8 +174,7 @@
 <!-- bootstrap -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
-<!-- firebase -->
-<script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
+
 <!-- notificaton -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/alertify.min.js"></script>
 
@@ -182,7 +182,7 @@
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-<script src="/js/init.js"></script>
+
 
 <script>
 
@@ -190,14 +190,14 @@
   function addError( id, message){
     try{
       $("#"+id).addClass("is-invalid");
-      $("#"+id).siblings('.invalid-feedback').val(message);
+      $("#"+id).siblings('.invalid-feedback').html(message);
     }
     catch(e){console.log(e.message)}
   }
   function removeError(id){
     try{
       $("#"+id).removeClass("is-invalid");
-      $("#"+id).siblings('.invalid-feedback').val("");
+      $("#"+id).siblings('.invalid-feedback').html("");
     }
     catch(e){console.log(e.message)}
   }
