@@ -86,6 +86,9 @@
                           <div class="form-group">
                             <label for="username">Username </label>
                             <input type="text" class="form-control" id="username" name="username" required />
+                            <div class="invalid-feedback">
+                              Username is not available
+                            </div>
                           </div>
                           <div class="form-group">
                             <label for="password">Password </label>
@@ -94,6 +97,9 @@
                           <div class="form-group">
                             <label for="confirmPassword">Confirm Password </label>
                             <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+                            <div class="invalid-feedback">
+                              Confirm Password and Password does not match
+                            </div>
                           </div>
                           <div class="form-group">
                             <label for="firstname">First Name: (Owner)</label>
@@ -114,10 +120,16 @@
                           <div class="form-group">
                             <label for="e_mail">Email Address</label>
                             <input type="email" class="form-control" id="e_mail" name="email" required />
+                            <div class="invalid-feedback">
+                              Email is not available
+                            </div>
                           </div>
                           <div class="form-group">
                             <label for="comp_name">Enter your Shopname:</label>
                             <input type="text" class="form-control" id="comp_name" name="shopName" required />
+                            <div class="invalid-feedback">
+                              Petshop name is not available
+                            </div>
                           </div>
                           <div class="form-group">
                             <label for="comp_street">Enter your Petshop's Street:</label>
@@ -160,7 +172,7 @@
                                 <option>Santolan</option>
                               </select>
                             </div>
-                          <input type="submit" class="btn btn-lg btn-primary " value="Submit" />
+                          <input id="submit" type="submit" class="btn btn-lg btn-primary " value="Submit" />
                       </div>
                 </div>
                 </fieldset>
@@ -178,8 +190,6 @@
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- jquery validation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js" ></script>
 <!-- bootstrap -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -191,48 +201,63 @@
 
 <script src="js/init.js"></script>
 <script>
-  jQuery.validator.addMethod("isUsernameAvailable", async function(value, element) {
-    console.log("test username");
-    var userResults = await firebase.firestore().collection("users").where("username", "==", value).get();
-    console.log(userResults)
-    return this.optional(element) || userResults.docs.length == 0;
-  }, "Username not available");
-  jQuery.validator.addMethod("isEmailAvailable", async function(value, element) {
-    var userResults = await firebase.firestore().collection("users").where("email", "==", value).get();
-    return this.optional(element) || userResults.docs.length == 0;
-  }, "Email not available");
-  jQuery.validator.addMethod("isShopNameAvailable", async function(value, element) {
-    var shopResults = await firebase.firestore().collection("petshops").where("shopName", "==", value).get();
-    return this.optional(element) || shopResults.docs.length == 0;
-  }, "Shop Name not available");
 
-  jQuery.validator.addMethod("isConfirmPasswordValid",function(value, element) {
 
-    var password = $("#password").val();
-    console.log("password: "+ password);
-    console.log("confirmpassword: "+ value);
-    return this.optional(element) || value == password;
-  }, "Password and Confirm Password does not match");
-
+  function addError( id, message){
+    try{
+      $("#"+id).addClass("is-invalid");
+      $("#"+id).siblings('.invalid-feedback').val(message);
+    }
+    catch(e){console.log(e.message)}
+  }
+  function removeError(id){
+    try{
+      $("#"+id).removeClass("is-invalid");
+      $("#"+id).siblings('.invalid-feedback').val("");
+    }
+    catch(e){console.log(e.message)}
+  }
+  function removeAllError(){
+    $(".is-invalid").removeClass(".is-invalid");
+  }
 
   $(document).ready(function(){
 
-    $("#registerForm").validate({
-      rules: {
-        username: "isUsernameAvailable",
-        confirmPassword: "isConfirmPasswordValid",
-        email: "isEmailAvailable",
-        shopName: "isShopNameAvailable", 
-      },
-      errorPlacement: function(label, element) {
-        label.addClass('text-danger');
-        label.insertAfter(element);
-      },
-      wrapper: 'span'
-    });
-
-    $("#registerForm").submit(async function(e){
+    $("#confirmPassword").blur(async function(){
+      var password = $("#password").val();
+      var confirmPassword = $("#confirmPassword").val();
+      if(password != confirmPassword){
+        addError("confirmPassword");
+      }
+      else removeError("confirmPassword");
+    })
+    $("#username").blur(async function(){
+      var username = $("#username").val();
+      var userResults = await firebase.firestore().collection("users").where("username", "==", username).get();
+      if(userResults.docs.length > 0){
+        addError("username", "Username is not available");
+      }
+      else removeError("username");
+    })
+    $("#e_mail").blur(async function(){
+      var email = $("#e_mail").val();
+      var emailResults = await firebase.firestore().collection("users").where("email", "==", email).get();
+      if(emailResults.docs.length > 0){
+        addError("e_mail", "Email is not available");
+      }
+      else removeError("e_mail");
+    })
+    $("#comp_name").blur(async function(){
+      var shopName = $("#comp_name").val();
+      var shopResults = await firebase.firestore().collection("users").where("shopName", "==", shopName).get();
+      if(shopResults.docs.length > 0){
+        addError("comp_name", "Petshop name is not available");
+      }
+      else removeError("comp_name");
+    })
+    $("#registerForm").submit(async (e)=>{
       e.preventDefault();
+      $("#submit").prop("disabled", true);
       var username = $("#username").val();
       var password = $("#password").val();
       var confirmPassword = $("#confirmPassword").val();
@@ -245,7 +270,18 @@
       var comp_street = document.getElementById("comp_street").value;
       var comp_loc = document.getElementById("comp_loc").value;
 
-      if($("#registerForm").valid()){
+      removeAllError();
+
+      var userResults = await firebase.firestore().collection("users").where("username", "==", username).get();
+      var emailResults = await firebase.firestore().collection("users").where("email", "==", email).get();
+      var shopResults = await firebase.firestore().collection("petshops").where("shopName", "==", comp_name).get();
+
+      if(password != confirmPassword ) addError("confirmPassword", "Confirm Password and Password does not match");
+      if(userResults.docs.length > 0) addError("username", "Username is not available");
+      if(emailResults.docs.length > 0) addError("e_mail", "Email is not available"); 
+      if(shopResults.docs.length > 0) addError("comp_name", "Petshop name is not available");
+
+      if($(".is-invalid").length == 0){
         var data = {
           username: username,
           password: password,
@@ -257,15 +293,28 @@
           type: "owner", 
           status: "inactive", 
         }
-        var user = await firebase.firestore().collection("users").add(data);
-        await firebase.firestore().collection("petshops").add({
-          ownerDocId: user.id,
-          name: comp_name,
-          street: comp_street,
-          barangay: comp_loc, 
-          status: "inactive", 
-        })
+        try{
+          var user = await firebase.firestore().collection("users").add(data);
+          await firebase.firestore().collection("petshops").add({
+            ownerDocId: user.id,
+            shopName: comp_name,
+            street: comp_street,
+            barangay: comp_loc, 
+            status: "inactive", 
+          })
+          alertify
+          .alert(`Account Registration Successful.
+                  You can use your account after an admin activates it`, function(){
+            window.location.href = "login.html";
+          });
+        }
+        catch(e){console.log(e.message)}
       }
+      else {
+        $(".is-invalid").first().focus();
+      }
+
+      $("#submit").prop("disabled", false);
     })
   });
 </script>
