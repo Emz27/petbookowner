@@ -5,15 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- bootstrap -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
   <!-- alertify -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/alertify.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/themes/default.css" />
+
+  <!-- datatables  -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
+  
   <!-- Link to CSS -->
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/loading.css">
-
   <!-- FONTS -->
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
@@ -72,9 +74,10 @@
                           <div class="form-group">
                             <label for="password_">Password:</label>
                             <input type="password" class="form-control" id="pwd" required>
+                            <div class="invalid-feedback">
+                            </div>
                           </div>
                           <br />
-                          <div id="loginError" class="text-danger"></div>
                           <br />
                           <input type="submit" class="btn btn-primary btn-lg" value="submit" />
                         </div>
@@ -98,66 +101,73 @@
 
   <!-- jquery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- jquery validation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js" ></script>
   <!-- bootstrap -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
   <!-- firebase -->
   <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
   <!-- notificaton -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/alertify.min.js"></script>
-  
+
+  <!-- datatables -->
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
   
   <script src="js/init.js"></script>
+
   <script>
-    
+    function addError(message){
+      $("#usr").addClass("is-invalid");
+      $("#pwd").addClass("is-invalid");
+      $(".invalid-feedback").html(message)
+    }
+    function removeError(){
+      $("#usr").removeClass("is-invalid");
+      $("#pwd").removeClass("is-invalid");
+      $(".invalid-feedback").html("")
+    }
     $(document).ready(function(){
-      var loginForm = $("#loginForm");
 
       $("#register").click(function(){
         window.location.href = "register.html";
       });
+      $("#usr").keyup(function(){
+        removeError();
+      })
+      $("#pwd").keyup(function(){
+        removeError();
+      })
 
-      // initialize loginForm jquery validation
-      loginForm.validate({
-        errorPlacement: function(label, element) {
-          label.addClass('text-danger');
-          label.insertAfter(element);
-        },
-        wrapper: 'span'
-      });
-      // loginForm on submit event
-      // async : asynchronous
-      loginForm.submit(async function(e){
+      $("#loginForm").submit(async function(e){
         e.preventDefault();
-        $("#loginError").val("");
         var username = $("#usr").val();
         var password = $("#pwd").val();
-        // check if form fields are valid
-        if(loginForm.valid()){
-          var userData;
-          // await: wait for process to finish before proceeding to next statement
-          var userResults = await firebase.firestore().collection("users").where("username", "==", username).get();
-          if(userResults.docs.length > 0){
-            // get data for the first row of results
-            var data = userResults.docs[0].data();
-            var userDocId = userResults.docs[0].id;
-            userData = {
-              ...data,
-              userDocId: userDocId,
-            }
-            if(userData.password === password){
-              sessionStorage.setItem("user", JSON.stringify(userData));
-              window.location.replace("home.html");
-            }
-            else {
-              $("#loginError").val("Username and Password does not match");
-            }
+
+        var userData;
+        // await: wait for process to finish before proceeding to next statement
+        var userResults = await firebase.firestore().collection("users").where("username", "==", username).get();
+        if(userResults.docs.length > 0){
+          // get data for the first row of results
+          var data = userResults.docs[0].data();
+          var userDocId = userResults.docs[0].id;
+          userData = {
+            ...data,
+            userDocId: userDocId,
           }
-          else {
-            $("#loginError").val("Username and Password does not match");
+          if(userData.password != password && userData.type == "groomer"){
+            addError("Invalid Username and Password")
           }
+          else if(userData.status == "inactive"){
+            addError("Account not Activated")
+          }
+          
+        }
+        else {
+          addError("Invalid Username and Password")
+        }
+        if($(".is-invalid").length == 0){
+          sessionStorage.setItem("user", JSON.stringify(userData));
+          window.location.href = userData.type+"/index.html";
         }
       });
     });
