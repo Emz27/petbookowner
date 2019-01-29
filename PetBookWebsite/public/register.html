@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
 <head>
+    <!-- session checker -->
+    <script src="/js/session_check.js"></script>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,15 +16,15 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
     
     <!-- Link to CSS -->
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/loading.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/loading.css">
     <!-- FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
     <!-- Title -->
-    <link rel="shortcut icon" href="images/pet.jpg" />
+    <link rel="shortcut icon" href="/images/pet.jpg" />
     <title> Pet Book </title>
     <style>
       
@@ -41,7 +43,7 @@
     <div id="jumb" class="jumbotron text-center">
       <h1 id="title">Welcome to Pet Book</h1></break>
       <p id="quote"><strong><i>An animal's eyes have the power to speak a great language.</i></strong></p>
-      <img src="images/petsfortitle.png" style="height: 300px; width: 500px;"/>
+      <img src="/images/petsfortitle.png" style="height: 300px; width: 500px;"/>
     </div>
   </div>
 </div>
@@ -51,30 +53,6 @@
 ******************************START OF THE WHEN LOGGED IN -->
 <div id="wrapper">
 
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand"><a href="index.html">
-                  HOME
-                  </a>
-                </li>
-                <li>
-                    <div class="active">
-                      Create a Petshop
-                      </div>
-                </li>
-                <li>
-                    <a href="Petshoplist.html">
-                      Lists of Petshop
-                </li>
-                <li>
-                    <a href="#">About PetBook</a>
-                </li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
-        <div class="parallax">
-        </div>
         <!-- Page Content -->
 
         <div id="page-content-wrapper">
@@ -204,7 +182,7 @@
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-<script src="js/init.js"></script>
+<script src="/js/init.js"></script>
 
 <script>
 
@@ -315,7 +293,7 @@
           alertify
           .alert(`Account Registration Successful.
                   You can use your account after an admin activates it`, function(){
-            window.location.href = "login.html";
+            window.location.href = "/login.html";
           });
         }
         catch(e){console.log(e.message)}

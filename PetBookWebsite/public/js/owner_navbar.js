@@ -12,15 +12,15 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li id="reservationLink" class="nav-item">
-          <a class="nav-link" href="index.html">Reservations <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/owner/index.html">Reservations <span class="sr-only">(current)</span></a>
         </li>
         <li id="groomerLink" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Groomers
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="groomer_list.html">List</a>
-            <a class="dropdown-item" href="groomer_create.html">Create</a>
+            <a class="dropdown-item" href="/owner/groomer_list.html">List</a>
+            <a class="dropdown-item" href="/owner/groomer_create.html">Create</a>
           </div>
         </li>
         <li id="serviceLink" class="nav-item dropdown">
@@ -28,8 +28,8 @@
             Services
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="service_list.html">List</a>
-            <a class="dropdown-item" href="service_create.html">Create</a>
+            <a class="dropdown-item" href="/owner/service_list.html">List</a>
+            <a class="dropdown-item" href="/owner/service_create.html">Create</a>
           </div>
         </li>
       </ul>
@@ -57,7 +57,7 @@ $(document).ready(function(){
 
   $("#logoutButton").click(function(){
     sessionStorage.clear();
-    window.location.href = "../login.html";
+    window.location.href = "/login.html";
   })
 
   

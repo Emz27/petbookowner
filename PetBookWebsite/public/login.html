@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
 <head>
+  <!-- session checker -->
+  <script src="/js/session_check.js"></script>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,15 +16,15 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
   
   <!-- Link to CSS -->
-  <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/loading.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/loading.css">
   <!-- FONTS -->
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
   <!-- Title -->
-  <link rel="shortcut icon" href="images/pet.jpg" />
+  <link rel="shortcut icon" href="/images/pet.jpg" />
   <title> Pet Book </title>
   <style>
     
@@ -37,7 +39,7 @@
   <div id="jumb" class="jumbotron text-center">
     <h1 id="title">Welcome to Pet Book</h1></break>
     <p id="quote"><strong><i>An animal's eyes have the power to speak a great language.</i></strong></p>
-    <img src="images/petsfortitle.png" style="height: 300px; width: 500px;"/>
+    <img src="/images/petsfortitle.png" style="height: 300px; width: 500px;"/>
   </div>
 </div>
 <!-- AFTER HEADER, JUMBOTRON-->
@@ -113,7 +115,7 @@
   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
   
-  <script src="js/init.js"></script>
+  <script src="/js/init.js"></script>
 
   <script>
     function addError(message){
@@ -129,7 +131,7 @@
     $(document).ready(function(){
 
       $("#register").click(function(){
-        window.location.href = "register.html";
+        window.location.href = "/register.html";
       });
       $("#usr").keyup(function(){
         removeError();
@@ -167,7 +169,7 @@
         }
         if($(".is-invalid").length == 0){
           sessionStorage.setItem("user", JSON.stringify(userData));
-          window.location.href = userData.type+"/index.html";
+          window.location.href = "/"+userData.type+"/index.html";
         }
       });
     });

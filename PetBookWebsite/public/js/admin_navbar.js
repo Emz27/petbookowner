@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li id="userLink" class="nav-item">
-          <a class="nav-link" href="index.html">Users <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/admin/index.html">Users <span class="sr-only">(current)</span></a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
@@ -34,7 +34,7 @@ $(document).ready(function(){
 
   $("#logoutButton").click(function(){
     sessionStorage.clear();
-    window.location.href = "../login.html";
+    window.location.href = "/login.html";
   })
 
   
