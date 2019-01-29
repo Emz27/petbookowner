@@ -36,25 +36,27 @@ db.settings({
       var userResult = await firebase.firestore().collection("users").where("username", "==", userSession.username).get()
       if(userResult.docs.length == 0){
         sessionStorage.clear();
-        window.location.href = "404.html";
+        if(window.location.pathname.includes("/admin/") || window.location.pathname.includes("/owner/"))location.replace('../login.html');
+        else location.replace('login.html');
       }
       else if( !window.location.pathname.includes("login.html") 
           && !window.location.pathname.includes("register.html")
           && !window.location.pathname.includes("/"+type+"/")
       ){
-        window.location.href = "404.html";
+        if(window.location.pathname.includes("/admin/") || window.location.pathname.includes("/owner/"))location.replace("../"+type+"/index.html");
+        else location.replace(+type+"/index.html");
       }
     }
     catch(e){
       console.log(e.message);
-      window.location.href = "404.html";
     }
     
   }
   else{
     if(!window.location.pathname.includes("login.html") && !window.location.pathname.includes("register.html")){
       console.log("no user, redirecting to login page");
-      location.replace('login.html');
+      if(window.location.pathname.includes("/admin/") || window.location.pathname.includes("/owner/"))location.replace('../login.html');
+      else location.replace('login.html');
     }
   }
 })()
