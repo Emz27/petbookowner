@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 
 <head>
-  <!-- session checker -->
-  <script src="/js/session_check.js"></script>
+  <!-- firebase -->
+<script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
+  <script src="/js/init.js"></script>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -31,16 +32,16 @@
   </style>
 </head>
 <body>
-  <div class="container mt-5 p-5">
-
+  <div class="container p-5">
+    <table id="groomerTable" class="table table-striped table-bordered" style="width:100%">
+    </table>
   </div>
   <!-- jquery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <!-- bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
-  <!-- firebase -->
-  <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
+  
   <!-- notificaton -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/alertify.min.js"></script>
 
@@ -50,10 +51,99 @@
   <!-- animation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script>
 
-  <script src="/js/init.js"></script>
+  
   <script src="/js/owner_navbar.js"></script>
   <script>
+    $(document).ready(function() {
+      var groomerDatatable = $('#groomerTable').DataTable({
+        stateSave: true,
+        columns: [
+          { 
+            data: function(row){
+                return `<td>${row.firstname} ${row.lastname}<td>`
+            },
+            title: "Name"
+          },
+          { data: "username", title: "Username"},
+          { data: "status", title: "Status"},
+          { data: function(row){
+            if(row.status == "active"){
+              return `
+              <td>
+                <div class="btn-group" role="group">
+                  <button onclick="deactivateGroomer('${row.userDocId}');" class="btn btn-secondary">Deactivate</button>
+                  <button onclick="deleteGroomer('${row.userDocId}');" class="btn btn-secondary">Delete</button>
+                </div>
+              </td>`
+            } 
+            else{
+              return `
+              <td>
+                <div class="btn-group" role="group">
+                  <button onclick="activateGroomer('${row.userDocId}');" class="btn btn-secondary">Activate</button>
+                  <button onclick="deleteGroomer('${row.userDocId}');" class="btn btn-secondary">Delete</button>
+                </div>
+              </td>`
+            }
+          }, title: "Action"},
+        ]
+      });
 
+      firebase.firestore().collection("users").where("type", "==", "groomer").onSnapshot(function(snapshot){
+        var list = [];
+        snapshot.docs.forEach(function(doc){
+          var data = {
+            ...doc.data(),
+            userDocId: doc.id,
+          }
+          list.push(data);
+        })
+        groomerDatatable.clear();
+        groomerDatatable.rows.add(list);
+        groomerDatatable.draw();
+      })
+    });
+    async function activateGroomer(userDocId){
+      try{
+        var batch = firebase.firestore().batch();
+        var userRef = firebase.firestore().collection("users").doc(userDocId);
+        await batch.update(userRef, {status: "active"});
+        await batch.commit();
+        alertify.success('Groomer Activated');
+      }
+      catch(e){
+        alertify.error('Activation Failed');
+        console.log(e)
+      }
+    }
+    async function deactivateGroomer(userDocId){
+      try{
+        var batch = firebase.firestore().batch();
+        var userRef = firebase.firestore().collection("users").doc(userDocId);
+        await batch.update(userRef, {status: "inactive"});
+        await batch.commit();
+        alertify.success('Groomer Deactivated');
+      }
+      catch(e){
+        alertify.error('Deactivation Failed');
+        console.log(e)
+      }
+    }
+    function deleteGroomer(userDocId){
+      alertify.confirm("Delete Groomer","Press Ok to delete a groomer",
+      async function(){
+        try{
+          await firebase.firestore().collection("users").doc(userDocId).delete();
+          alertify.success('Groomer Deleted');
+        }
+        catch(e){
+          alertify.error('Deletion Failed');
+          console.log(e)
+        }
+      },
+      async function(){
+      });
+    }
   </script>
 </body>
 </html>
