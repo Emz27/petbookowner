@@ -32,8 +32,70 @@
   </style>
 </head>
 <body>
-  <div class="container mt-5 p-5">
+  <div class="container p-5">
+      <form id="registerForm">
 
+          <div class="form-row p-3">
+            <h2 class="bold">Create Service</h2>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 px-5">
+              <div class="form-row">
+                <div class="col-md-8 mb-3">
+                  <label for="serviceName">Name</label>
+                  <input type="text" class="form-control" id="serviceName" placeholder="Service Name" required>
+                  <div class="invalid-feedback">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col mb-3">
+                  <label for="details">Details</label>
+                  <textarea id="details" class="form-control" id="details" rows="5" required></textarea>
+                  <div class="invalid-feedback">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 px-5">
+              <div class="form-row">
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="homeService">
+                  <label class="custom-control-label" for="homeService">Available for Home service</label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="shopService">
+                  <label class="custom-control-label" for="shopService">Available for Shop service</label>
+                  <div class="invalid-feedback">
+                    Select atleast one availability
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Price Range</label>
+                <div class="form-row">
+                  <div class="col-md-6 mb-3">
+                    <label for="minPrice">Min Price</label>
+                    <input type="number" class="form-control" id="minPrice" placeholder="Minimum Price" required>
+                    <div class="invalid-feedback">
+                      Min Price must be less than Max Price
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="maxPrice">Max Price</label>
+                    <input type="number" class="form-control" id="maxPrice" placeholder="Maximum Price" required>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+          <div class="form-row  mt-5 px-5">
+            <button type="submit" class="btn btn-primary px-5">Save</button>
+            <a class="ml-auto" href="/owner/service_list.html">Go to list</a>
+          </div>
+        </form>
   </div>
   <!-- jquery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -53,7 +115,83 @@
   
   <script src="/js/owner_navbar.js"></script>
   <script>
+    function removeAllError(){
+      $(".is-invalid").removeClass(".is-invalid");
+    }
+  
+    $(document).ready(function(){
 
+      $("#minPrice").blur(function(e){
+        $("#minPrice").removeClass("is-invalid");
+        $("#maxPrice").removeClass("is-invalid");
+      });
+      $("#maxPrice").blur(function(e){
+        $("#minPrice").removeClass("is-invalid");
+        $("#maxPrice").removeClass("is-invalid");
+      });
+
+      $("#homeService").click(function(e){
+        $("#shopService").removeClass("is-invalid");
+        $("#homeService").removeClass("is-invalid");
+      });
+
+      $("#shopService").click(function(e){
+        $("#shopService").removeClass("is-invalid");
+        $("#homeService").removeClass("is-invalid");
+      });
+
+      $("#registerForm").submit(async (e)=>{
+        e.preventDefault();
+        $("#submit").prop("disabled", true);
+
+        removeAllError();
+
+        var serviceName = $("#serviceName").val();
+        var details = $("#details").val();
+        var homeService = $("#homeService").prop("checked");
+        var shopService = $("#shopService").prop("checked");
+        var minPrice = $("#minPrice").val();
+        var maxPrice = $("#maxPrice").val();
+        if(minPrice > maxPrice){
+          $("#minPrice").addClass("is-invalid");
+          $("#maxPrice").addClass("is-invalid");
+        }
+        if(!homeService && !shopService){
+          $("#homeService").addClass("is-invalid");
+          $("#shopService").addClass("is-invalid");
+        }
+  
+        if($(".is-invalid").length == 0){
+          try{
+            var user = JSON.parse(sessionStorage.getItem("user"));
+            console.log(user)
+            await firebase.firestore().collection("services").add({
+              petshopDocId: user.petshopDocId,
+              serviceName: serviceName,
+              details: details,
+              homeService: homeService,
+              shopService: shopService,
+              minPrice: parseInt(minPrice),
+              maxPrice: parseInt(maxPrice),
+              status: "inactive",
+            })
+            alertify.success('Service '+serviceName+ " added!");
+
+            $("#serviceName").val("");
+            $("#details").val("");
+            $("#homeService").prop("checked", false);
+            $("#shopService").prop("checked", false);
+            $("#minPrice").val(0);
+            $("#maxPrice").val(0);
+          }
+          catch(e){console.log(e.message)}
+        }
+        else {
+          $(".is-invalid").first().focus();
+        }
+        $("#submit").prop("disabled", false);
+      })
+    });
   </script>
 </body>
 </html>

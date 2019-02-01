@@ -32,8 +32,9 @@
   </style>
 </head>
 <body>
-  <div class="container mt-5 p-5">
-
+  <div class="container p-5">
+    <table id="serviceTable" class="table table-striped table-bordered" style="width:100%">
+    </table>
   </div>
   <!-- jquery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -53,7 +54,98 @@
   
   <script src="/js/owner_navbar.js"></script>
   <script>
+    var userSession = JSON.parse(sessionStorage.getItem("user"));
+    console.log(userSession);
+    $(document).ready(function() {
+      var serviceDatatable = $('#serviceTable').DataTable({
+        stateSave: true,
+        columns: [
+          { data: "serviceName", title: "Service Name"},
+          { data: function(row){
+            return `
+              <td>
+                ${row.minPrice} - ${row.maxPrice}
+              </td>`
+          }, title: "Price Range"},
+          { data: "status", title: "Status"},
+          { data: function(row){
+            if(row.status == "active"){
+              return `
+              <td>
+                <div class="btn-group" role="group">
+                  <button onclick="deactivateService('${row.serviceDocId}');" class="btn btn-secondary">Deactivate</button>
+                  <button onclick="deleteService('${row.serviceDocId}');" class="btn btn-secondary">Delete</button>
+                </div>
+              </td>`
+            } 
+            else{
+              return `
+              <td>
+                <div class="btn-group" role="group">
+                  <button onclick="activateService('${row.serviceDocId}');" class="btn btn-secondary">Activate</button>
+                  <button onclick="deleteService('${row.serviceDocId}');" class="btn btn-secondary">Delete</button>
+                </div>
+              </td>`
+            }
+          }, title: "Action"},
+        ]
+      });
 
+      firebase.firestore().collection("services").where("petshopDocId", "==", userSession.petshopDocId).onSnapshot(function(snapshot){
+        var list = [];
+        snapshot.docs.forEach(function(doc){
+          var data = {
+            ...doc.data(),
+            serviceDocId: doc.id,
+          }
+          list.push(data);
+        })
+        serviceDatatable.clear();
+        serviceDatatable.rows.add(list);
+        serviceDatatable.draw();
+      })
+    });
+    async function activateService(serviceDocId){
+      try{
+        var batch = firebase.firestore().batch();
+        var userRef = firebase.firestore().collection("services").doc(serviceDocId);
+        await batch.update(userRef, {status: "active"});
+        await batch.commit();
+        alertify.success('Service Activated');
+      }
+      catch(e){
+        alertify.error('Activation Failed');
+        console.log(e)
+      }
+    }
+    async function deactivateService(serviceDocId){
+      try{
+        var batch = firebase.firestore().batch();
+        var userRef = firebase.firestore().collection("services").doc(serviceDocId);
+        await batch.update(userRef, {status: "inactive"});
+        await batch.commit();
+        alertify.success('Service Deactivated');
+      }
+      catch(e){
+        alertify.error('Deactivation Failed');
+        console.log(e)
+      }
+    }
+    function deleteService(serviceDocId){
+      alertify.confirm("Delete Service","Press Ok to delete a service",
+      async function(){
+        try{
+          await firebase.firestore().collection("services").doc(serviceDocId).delete();
+          alertify.success('Service Deleted');
+        }
+        catch(e){
+          alertify.error('Deletion Failed');
+          console.log(e)
+        }
+      },
+      async function(){
+      });
+    }
   </script>
 </body>
 </html>
