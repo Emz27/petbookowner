@@ -281,13 +281,16 @@
             type: "owner", 
             status: "inactive", 
             petshopDocId: petshopRef.id,
+            petshopName: comp_name,
           });
           batch.set(petshopRef, {
-            shopName: comp_name,
+            petshopName: comp_name,
             street: comp_street,
             barangay: comp_loc, 
             status: "inactive", 
-            userDocId: userRef.id,
+            ownerDocId: userRef.id,
+            ownerFirstname: fname,
+            ownerLastname: lname,
           });
           await batch.commit();
           alertify

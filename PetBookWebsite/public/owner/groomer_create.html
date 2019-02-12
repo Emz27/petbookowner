@@ -170,6 +170,7 @@
             console.log(user)
             await firebase.firestore().collection("users").add({
               petshopDocId: user.petshopDocId,
+              petshopName: user.petshopName,
               username: username,
               password: password,
               firstname: firstname,

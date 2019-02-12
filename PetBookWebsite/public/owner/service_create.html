@@ -176,6 +176,7 @@
             console.log(user)
             await firebase.firestore().collection("services").add({
               petshopDocId: user.petshopDocId,
+              petshopName: user.petshopName,
               serviceName: serviceName,
               details: details,
               homeService: homeService,
@@ -183,7 +184,7 @@
               minPrice: parseInt(minPrice),
               maxPrice: parseInt(maxPrice),
               duration: parseInt(duration),
-              status: "inactive",
+              status: "active",
             })
             alertify.success('Service '+serviceName+ " added!");
 
