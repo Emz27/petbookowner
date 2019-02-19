@@ -135,6 +135,11 @@
       alertify.confirm("Delete Service","Press Ok to delete a service",
       async function(){
         try{
+          let serviceDoc = await firebase.firestore().collection("services").doc(serviceDocId).get();
+          let data = serviceDoc.data();
+          for( let image of data.images){
+            firebase.storage().ref().child("services/"+serviceDocId+"/"+image.name).delete();
+          }
           await firebase.firestore().collection("services").doc(serviceDocId).delete();
           alertify.success('Service Deleted');
         }

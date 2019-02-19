@@ -97,6 +97,13 @@
               </div>
           </div>
         </div>
+          <div class="form-row mt-5 px-5">
+            <label type="button" for="addImage" class="btn btn-primary" > Add Image </label>
+            <input style="display: none" id="addImage" type="file" name="filename" accept="image/gif, image/jpeg, image/png" onchange="readURL(this);" multiple/>
+          </div>
+          <div id="images" class="form-row d-flex flex-wrap mt-5 px-5">
+
+          </div>
           <div class="form-row  mt-5 px-5">
             <button type="submit" class="btn btn-primary px-5">Save</button>
             <a class="ml-auto" href="/owner/service_list.html">Go to list</a>
@@ -121,10 +128,41 @@
   
   <script src="/js/owner_navbar.js"></script>
   <script>
+    var images = [];
     function removeAllError(){
       $(".is-invalid").removeClass(".is-invalid");
     }
-  
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        console.log(input.files);
+        for(let file of input.files){
+          let reader = new FileReader();
+          reader.onload = function (e) {
+            images.push({ name: file.name, type: file.type, src: e.target.result});
+
+            $("#images").html("");
+
+            images.forEach((image)=>{
+              $("#images").prepend(`
+                <div class="col-3">
+                  <button style="border-radius: 100%; position: relative; top: 0; right: 0;" type="button" class="close" onclick="removeImage(this)">&times;</button>
+                  <img src="${image.src}" alt="${image.name}" width="150" height="200" />
+                </div>
+              `)
+            })
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+    function removeImage(e){
+      let name = $(e).siblings("img").attr("alt");
+      let index = images.find((image)=>image.name == name);
+      if(index){
+        images.splice(index,1);
+      }
+      $(e).parent().remove();
+    }
     $(document).ready(function(){
 
       $("#minPrice").blur(function(e){
@@ -173,8 +211,12 @@
         if($(".is-invalid").length == 0){
           try{
             var user = JSON.parse(sessionStorage.getItem("user"));
-            console.log(user)
-            await firebase.firestore().collection("services").add({
+            console.log(user);
+            let service = await firebase.firestore().collection("services").doc();
+            for( let image of images){
+              firebase.storage().ref().child("services/"+ service.id +"/"+ image.name).putString(image.src, 'data_url');
+            }
+            service.set({
               petshopDocId: user.petshopDocId,
               petshopName: user.petshopName,
               serviceName: serviceName,
@@ -185,7 +227,9 @@
               maxPrice: parseInt(maxPrice),
               duration: parseInt(duration),
               status: "active",
+              images: images.map(m=>m.name),
             })
+            
             alertify.success('Service '+serviceName+ " added!");
 
             $("#serviceName").val("");
@@ -195,6 +239,8 @@
             $("#minPrice").val(0);
             $("#maxPrice").val(0);
             $("#duration").val(0);
+            $("#images").html("");
+            images = [];
           }
           catch(e){console.log(e.message)}
         }
