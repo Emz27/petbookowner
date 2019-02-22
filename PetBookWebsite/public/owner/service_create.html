@@ -58,29 +58,11 @@
               </div>
             </div>
             <div class="col-md-6 px-5">
-              <div class="form-row">
-                <div class="custom-control custom-checkbox mb-3">
-                  <input type="checkbox" class="custom-control-input" id="homeService">
-                  <label class="custom-control-label" for="homeService">Available for Home service</label>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="custom-control custom-checkbox mb-3">
-                  <input type="checkbox" class="custom-control-input" id="shopService">
-                  <label class="custom-control-label" for="shopService">Available for Shop service</label>
-                  <div class="invalid-feedback">
-                    Select atleast one availability
-                  </div>
-                </div>
-              </div>
               <div class="form-group">
                 <label><b>Price Range</b></label>
                 <div class="form-row">
                   <div class="col-md-6 mb-3">
                     <input type="number" class="form-control" id="minPrice" min=20 placeholder="Minimum Price" required>
-                    <div class="invalid-feedback">
-                      Min Price must be less than Max Price
-                    </div>
                   </div>
                   <div class="col-md-6 mb-3">
                     <input type="number" class="form-control" id="maxPrice" placeholder="Maximum Price" required>
@@ -165,15 +147,19 @@
     }
     $(document).ready(function(){
 
-      $("#minPrice").blur(function(e){
-        $("#minPrice").removeClass("is-invalid");
-        $("#maxPrice").removeClass("is-invalid");
+      $("#minPrice").change(function(e){
+        if($(this).val() > 0){
+          $("#maxPrice").prop("min", $(this).val());
+        }
+        else $("#maxPrice").removeProp("min");
       });
-      $("#maxPrice").blur(function(e){
-        $("#minPrice").removeClass("is-invalid");
-        $("#maxPrice").removeClass("is-invalid");
+      $("#maxPrice").change(function(e){
+        if($(this).val() > 0){
+          $("#minPrice").prop("max", $(this).val());
+        }
+        else $("#minPrice").removeProp("max");
       });
-      $("#duration").blur(function(e){
+      $("#duration").change(function(e){
         $("#duration").removeClass("is-invalid");
       });
       $("#homeService").click(function(e){
@@ -199,10 +185,6 @@
         var minPrice = $("#minPrice").val();
         var maxPrice = $("#maxPrice").val();
         var duration = $("#duration").val();
-        if(minPrice > maxPrice){
-          $("#minPrice").addClass("is-invalid");
-          $("#maxPrice").addClass("is-invalid");
-        }
         if(!homeService && !shopService){
           $("#homeService").addClass("is-invalid");
           $("#shopService").addClass("is-invalid");
