@@ -63,26 +63,6 @@
               </div>
             </div>
           </div>  
-          <div class="form-row">
-            <div class="col-md-4 mb-4">
-              <label for="username">Username</label>
-              <input type="text" class="form-control" id="username" placeholder="Username" required>
-              <div class="invalid-feedback">
-              </div>
-            </div>
-            <div class="col-md-4 mb-4">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" id="password" placeholder="Password" required>
-              <div class="invalid-feedback">
-              </div>
-            </div>
-            <div class="col-md-4 mb-4">
-              <label for="confirmPassword">Confirm Password</label>
-              <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
-              <div class="invalid-feedback">
-              </div>
-            </div>
-          </div>
           <div></div>
           <div class="form-row mt-3">
               <button id="submit" class="btn btn-primary" type="submit">Create</button>
@@ -108,91 +88,39 @@
   
   <script src="/js/owner_navbar.js"></script>
   <script>
-    function addError( id, message){
-      try{
-        $("#"+id).addClass("is-invalid");
-        $("#"+id).siblings('.invalid-feedback').html(message);
-      }
-      catch(e){console.log(e.message)}
-    }
-    function removeError(id){
-      try{
-        $("#"+id).removeClass("is-invalid");
-        $("#"+id).siblings('.invalid-feedback').html("");
-      }
-      catch(e){console.log(e.message)}
-    }
-    function removeAllError(){
-      $(".is-invalid").removeClass(".is-invalid");
-    }
   
     $(document).ready(function(){
-  
-      $("#confirmPassword").blur(async function(){
-        var password = $("#password").val();
-        var confirmPassword = $("#confirmPassword").val();
-        if(password != confirmPassword){
-          addError("confirmPassword", "Password and Confirm Password does not match");
-        }
-        else removeError("confirmPassword");
-      })
-      $("#username").blur(async function(){
-        var username = $("#username").val();
-        var userResults = await firebase.firestore().collection("users").where("username", "==", username).get();
-        if(userResults.docs.length > 0){
-          addError("username", "Username is not available");
-        }
-        else removeError("username");
-      })
 
       $("#registerForm").submit(async (e)=>{
         e.preventDefault();
         $("#submit").prop("disabled", true);
-        var username = $("#username").val();
-        var password = $("#password").val();
         var firstname = $("#firstname").val();
         var confirmPassword = $("#confirmPassword").val()
         var lastname = $("#lastname").val();
         var gender = $("input[name='gender']").val();
 
-        console.log("gender:", gender);
-  
-        removeAllError();
-  
-        var userResults = await firebase.firestore().collection("users").where("username", "==", username).get();
-  
-        if(password != confirmPassword ) addError("confirmPassword", "Confirm Password and Password does not match");
-        if(userResults.docs.length > 0) addError("username", "Username is not available");
-  
-        if($(".is-invalid").length == 0){
-          try{
-            var user = JSON.parse(sessionStorage.getItem("user"));
-            console.log(user)
-            await firebase.firestore().collection("users").add({
-              petshopDocId: user.petshopDocId,
-              petshopName: user.petshopName,
-              username: username,
-              password: password,
-              firstname: firstname,
-              lastname: lastname,
-              gender: gender,
-              status: "active",
-              type: "groomer"
-            })
-            alertify.success('Groomer '+firstname+" "+lastname+ " added!");
-            $("#username").val("");
-            $("#password").val("");
-            $("#firstname").val("");
-            $("#confirmPassword").val("")
-            $("#lastname").val("");
-            $("#female").prop("checked", false);
-            $("#male").prop("checked", false);
-          }
-          catch(e){console.log(e.message)}
+        try{
+          var user = JSON.parse(sessionStorage.getItem("user"));
+          console.log(user)
+          await firebase.firestore().collection("users").add({
+            petshopDocId: user.petshopDocId,
+            petshopName: user.petshopName,
+            firstname: firstname,
+            lastname: lastname,
+            gender: gender,
+            status: "active",
+            type: "groomer"
+          })
+          alertify.success('Groomer '+firstname+" "+lastname+ " added!");
+          $("#username").val("");
+          $("#password").val("");
+          $("#firstname").val("");
+          $("#confirmPassword").val("")
+          $("#lastname").val("");
+          $("#female").prop("checked", false);
+          $("#male").prop("checked", false);
         }
-        else {
-          $(".is-invalid").first().focus();
-        }
+        catch(e){console.log(e.message)}
   
         $("#submit").prop("disabled", false);
       })
