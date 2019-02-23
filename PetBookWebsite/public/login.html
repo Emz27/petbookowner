@@ -131,6 +131,7 @@
     $(document).ready(function(){
 
       $("#register").click(function(){
+        console.log("redirect to register")
         window.location.href = "/register.html";
       });
       $("#usr").keyup(function(){
@@ -142,6 +143,7 @@
 
       $("#loginForm").submit(async function(e){
         e.preventDefault();
+        removeError();
         var username = $("#usr").val();
         var password = $("#pwd").val();
 
