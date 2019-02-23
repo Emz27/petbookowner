@@ -59,6 +59,13 @@
             </div>
             <div class="col-md-6 px-5">
               <div class="form-group">
+                <label for="petTypes"><b>Available For</b></label>
+                <select multiple size=2 class="form-control" id="petTypes" required>
+                  <option>Dog</option>
+                  <option>Cat</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label><b>Price Range</b></label>
                 <div class="form-row">
                   <div class="col-md-6 mb-3">
@@ -73,7 +80,18 @@
                 <label><b>Duration</b></label>
                 <div class="form-row">
                   <div class="col-md-6 mb-3">
-                    <input type="number" class="form-control" id="duration" placeholder="Duration in minutes" min=15 required>
+                    <select id="duration" class="form-control" required>
+                      <option value=30>30 minutes</option>
+                      <option value=60>1 hour</option>
+                      <option value=90>1 hour 30 minutes</option>
+                      <option value=120>2 hours</option>
+                      <option value=150>2 hours 30 minutes</option>
+                      <option value=180>3 hours</option>
+                      <option value=210>3 hours 30 minutes</option>
+                      <option value=240>4 hours</option>
+                      <option value=270>4 hours 30 minutes</option>
+                      <option value=300>5 hours</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -162,15 +180,6 @@
       $("#duration").change(function(e){
         $("#duration").removeClass("is-invalid");
       });
-      $("#homeService").click(function(e){
-        $("#shopService").removeClass("is-invalid");
-        $("#homeService").removeClass("is-invalid");
-      });
-
-      $("#shopService").click(function(e){
-        $("#shopService").removeClass("is-invalid");
-        $("#homeService").removeClass("is-invalid");
-      });
 
       $("#registerForm").submit(async (e)=>{
         e.preventDefault();
@@ -180,15 +189,10 @@
 
         var serviceName = $("#serviceName").val();
         var details = $("#details").val();
-        var homeService = $("#homeService").prop("checked");
-        var shopService = $("#shopService").prop("checked");
         var minPrice = $("#minPrice").val();
         var maxPrice = $("#maxPrice").val();
         var duration = $("#duration").val();
-        if(!homeService && !shopService){
-          $("#homeService").addClass("is-invalid");
-          $("#shopService").addClass("is-invalid");
-        }
+        var petTypes = $("#petTypes").val();
   
         if($(".is-invalid").length == 0){
           try{
@@ -203,11 +207,10 @@
               petshopName: user.petshopName,
               serviceName: serviceName,
               details: details,
-              homeService: homeService,
-              shopService: shopService,
               minPrice: parseInt(minPrice),
               maxPrice: parseInt(maxPrice),
               duration: parseInt(duration),
+              petTypes: petTypes,
               status: "active",
               images: images.map(m=>m.name),
             })
@@ -216,11 +219,10 @@
 
             $("#serviceName").val("");
             $("#details").val("");
-            $("#homeService").prop("checked", false);
-            $("#shopService").prop("checked", false);
             $("#minPrice").val(0);
             $("#maxPrice").val(0);
             $("#duration").val(0);
+            $("#petTypes").val("");
             $("#images").html("");
             images = [];
           }
