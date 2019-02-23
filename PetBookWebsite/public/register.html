@@ -28,19 +28,23 @@
     <link rel="shortcut icon" href="/images/pet.jpg" />
     <title> Pet Book </title>
     <style>
-      
+      .pac-container {
+        top: 40px !important;
+        left: 0px !important;
+      }
+      #jumb{
+        padding: 0;
+        margin: 0;
+        width: 100%;
+      }
+      #registerForm{
+        height: 100%;
+        margin-bottom: 500px;
+      }
     </style>
   </head>
 <body>
-<header>
-</header>
-<!-- HEADER , JUMBOTROB -->
-
-<!-- *****************************************************************************************************
-************************************************************************************************************
-******************************START OF THE LOGGED IN -->
-<div id="not_loggedin">
-  <div class="container-fluid">
+  <div class="container-fluid p-0 m-0">
     <div id="jumb" class="jumbotron text-center">
       <h1 id="title">Welcome to Pet Book</h1></break>
       <p id="quote"><strong><i>An animal's eyes have the power to speak a great language.</i></strong></p>
@@ -49,125 +53,67 @@
   </div>
 </div>
 
-<!-- *****************************************************************************************************
-************************************************************************************************************
-******************************START OF THE WHEN LOGGED IN -->
-<div id="wrapper">
-
-        <!-- Page Content -->
-
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <!-- START OF REGISTRATION -->
-                <form id="registerForm">
-                    <fieldset>
-                <div class="row">
-
-                      <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 m-auto">
-                          <div class="form-group">
-                            <label for="username">Username </label>
-                            <input type="text" class="form-control" id="username" name="username" required />
-                            <div class="invalid-feedback">
-                              Username is not available
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="password">Password </label>
-                            <input type="password" class="form-control" id="password" name="password" required />
-                          </div>
-                          <div class="form-group">
-                            <label for="confirmPassword">Confirm Password </label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
-                            <div class="invalid-feedback">
-                              Confirm Password and Password does not match
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="firstname">First Name: (Owner)</label>
-                            <input type="text" class="form-control" id="firstname" required />
-                          </div>
-                          <div class="form-group">
-                            <label for="lastname">Last Name: (Owner)</label>
-                            <input type="text" class="form-control" id="lastname" required />
-                          </div>
-                          <div class="form-group">
-                            <label for="contact">Contact #: (Owner)</label>
-                            <input type="number" onkeydown="javascript: return event.keyCode == 69 ? false : true" class="form-control" id="contact" required />
-                          </div>
-                          <div class="form-group">
-                            <label for="address">Address: (Owner)</label>
-                            <input type="text" class="form-control" id="address" required />
-                          </div>
-                          <div class="form-group">
-                            <label for="e_mail">Email Address</label>
-                            <input type="email" class="form-control" id="e_mail" name="email" required />
-                            <div class="invalid-feedback">
-                              Email is not available
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="comp_name">Enter your Shopname:</label>
-                            <input type="text" class="form-control" id="comp_name" name="shopName" required />
-                            <div class="invalid-feedback">
-                              Petshop name is not available
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="comp_street">Enter your Petshop's Street:</label>
-                            <input type="text" class="form-control" id="comp_street" required />
-                          </div>
-                          <div class="form-group">
-                              <label for="comp_loc">Enter your Pet Shop's Barangay</label>
-                              <select class="form-control" id="comp_loc" required>
-                                <option value="" disabled selected><strong>District 1 Pasig</strong></option>
-                                <option>Bagong Ilog</option>
-                                <option>Bagong Katipunan</option>
-                                <option>Bambang</option>
-                                <option>Buting</option>
-                                <option>Caniogan</option>
-                                <option>Kalawaan</option>
-                                <option>Kapasigan</option>
-                                <option> Kapitolyo</option>
-                                <option>Malinao</option>
-                                <option>Oranbo</option>
-                                <option>Palatiw</option>
-                                <option>Pineda</option>
-                                <option>Sagad</option>
-                                <option>San Antonio</option>
-                                <option>San Joaquin</option>
-                                <option>San Jose</option>
-                                <option>San Nicolas (Poblacion)</option>
-                                <option>San Miguel</option>
-                                <option>Santa Cruz</option>
-                                <option>Santa Rosa</option>
-                                <option>Santo Tomas</option>
-                                <option>Sumilang</option>
-                                <option>Ugong</option>
-                                <option value="" disabled selected><strong>District 2 Pasig</strong></option>
-                                <option>Dela Paz</option>
-                                <option>Manggahan</option>
-                                <option>Maybunga</option>
-                                <option>Pinagbuhatan</option>
-                                <option>Rosario</option>
-                                <option>Santa Lucia</option>
-                                <option>Santolan</option>
-                              </select>
-                            </div>
-                          <input id="submit" type="submit" class="btn btn-lg btn-primary " value="Submit" />
-                      </div>
+    <!-- START OF REGISTRATION -->
+    <form id="registerForm">
+          <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 m-auto">
+              <div class="form-group">
+                <label for="username">Username </label>
+                <input type="text" class="form-control" id="username" name="username" required />
+                <div class="invalid-feedback">
+                  Username is not available
                 </div>
-                </fieldset>
-                </form>
-            </div>
-        </div>
-        <!-- /#page-content-wrapper -->
-
-        <div class="parallax2">
-        </div>
-        <!-- END OF THE -->
-    </div>
-    <!-- /#wrapper -->
-
+              </div>
+              <div class="form-group">
+                <label for="password">Password </label>
+                <input type="password" class="form-control" id="password" name="password" required />
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Confirm Password </label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+                <div class="invalid-feedback">
+                  Confirm Password and Password does not match
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="firstname">First Name: (Owner)</label>
+                <input type="text" class="form-control" id="firstname" required />
+              </div>
+              <div class="form-group">
+                <label for="lastname">Last Name: (Owner)</label>
+                <input type="text" class="form-control" id="lastname" required />
+              </div>
+              <div class="form-group">
+                <label for="contact">Contact #: (Owner)</label>
+                <input type="number" onkeydown="javascript: return event.keyCode == 69 ? false : true" class="form-control" id="contact" required />
+              </div>
+              <div class="form-group">
+                <label for="e_mail">Email Address</label>
+                <input type="email" class="form-control" id="e_mail" name="email" required />
+                <div class="invalid-feedback">
+                  Email is not available
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="comp_name">Enter your Shopname:</label>
+                <input type="text" class="form-control" id="comp_name" name="shopName" required />
+                <div class="invalid-feedback">
+                  Petshop name is not available
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="address">Enter your Petshop's Address:</label>
+                <div class="form-row m-0 p-0 pb-5" style="position:relative">
+                  <input id="address" onFocus="geolocate()" type="text" class="form-control" required />
+                  <div class="invalid-feedback">
+                    Please enter valid address
+                  </div>
+                </div>
+              </div>
+              <input id="submit" type="submit" class="btn btn-lg btn-primary " value="Submit" />
+          </div>
+    </form>
+  </div>
+</div>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -185,7 +131,8 @@
 
 
 <script>
-
+  var formatted_address = -1;
+  var loc = -1;
 
   function addError( id, message){
     try{
@@ -251,8 +198,6 @@
       var address = document.getElementById("address").value;
       var email = document.getElementById("e_mail").value;
       var comp_name = document.getElementById("comp_name").value;
-      var comp_street = document.getElementById("comp_street").value;
-      var comp_loc = document.getElementById("comp_loc").value;
 
       removeAllError();
 
@@ -264,6 +209,7 @@
       if(userResults.docs.length > 0) addError("username", "Username is not available");
       if(emailResults.docs.length > 0) addError("e_mail", "Email is not available"); 
       if(shopResults.docs.length > 0) addError("comp_name", "Petshop name is not available");
+      if(formatted_address == -1 || loc == -1) addError("address", "Please enter valid address");
 
       if($(".is-invalid").length == 0){
         try{
@@ -276,7 +222,8 @@
             firstname: fname,
             lastname: lname,
             contact: contact,
-            address: address,
+            address: formatted_address,
+            location: loc,
             email: email,
             type: "owner", 
             status: "inactive", 
@@ -285,8 +232,7 @@
           });
           batch.set(petshopRef, {
             petshopName: comp_name,
-            street: comp_street,
-            barangay: comp_loc, 
+            address: address,
             status: "inactive", 
             ownerDocId: userRef.id,
             ownerFirstname: fname,
@@ -307,7 +253,81 @@
 
       $("#submit").prop("disabled", false);
     })
+
+    var addressInputElement = $('#address');
+    addressInputElement.on('focus', function () {
+      var pacContainer = $('.pac-container');
+      $(addressInputElement.parent()).append(pacContainer);
+    })
   });
+
+
+  var placeSearch, autocomplete;
+
+  var componentForm = {
+    street_number: 'short_name',
+    route: 'long_name',
+    locality: 'long_name',
+    administrative_area_level_1: 'short_name',
+    country: 'long_name',
+    postal_code: 'short_name'
+  };
+  function initAutocomplete() {
+    // Create the autocomplete object, restricting the search predictions to
+    // geographical location types.
+    autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('address'), {types: ['geocode']});
+    var geocoder = new google.maps.Geocoder;
+
+    // Avoid paying for data that you don't need by restricting the set of
+    // place fields that are returned to just the address components.
+    autocomplete.setFields('address_components');
+
+    // When the user selects an address from the drop-down, populate the
+    // address fields in the form.
+    autocomplete.addListener('place_changed', fillInAddress);
+
+  }
+  function fillInAddress() {
+    // Get the place details from the autocomplete object.
+    var place = autocomplete.getPlace();
+    try{
+      console.log("lat: "+ place.geometry.location.lat());
+      console.log("lng: "+ place.geometry.location.lng());
+
+      formatted_address = place.formatted_address;
+      loc = {
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng(),
+      }
+    }
+    catch(e){
+      formatted_address = -1;
+      loc = -1
+    }
+    if(formatted_address == -1 || loc == -1) addError("address", "Please enter valid address");
+    else removeError("address");
+    
+  }
+  // Bias the autocomplete object to the user's geographical location,
+  // as supplied by the browser's 'navigator.geolocation' object.
+  function geolocate() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var geolocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        var circle = new google.maps.Circle(
+            {center: geolocation, radius: position.coords.accuracy});
+        autocomplete.setBounds(circle.getBounds());
+      });
+    }
+  }
+
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKLNDKXRY5niSySOE8TIdz2yFgBmHyhjo&libraries=places&callback=initAutocomplete"></script>
+
+
 </body>
 </html>
