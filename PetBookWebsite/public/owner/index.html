@@ -30,38 +30,74 @@
   <link rel="shortcut icon" href="/images/pet.jpg" />
   <title> Pet Book </title>
   <style>
-    
+    .reservationItem{
+      shadow
+    }
+    .reservationItem:hover{
+      background-color: green;
+      transition-duration: 1000ms;
+    }
   </style>
 </head>
 <body>
   <div class="container mt-5 p-5">
-  
-  <!-- The Modal -->
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Modal body..
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success">Accept</button>
-          <button type="button" class="btn btn-primary">Adjust</button>
-        </div>
-  
-      </div>
+    <button id="addReservationButton" type="button" class="btn btn-primary">Add Reservation</button>
+    
+      
+    <div id="reservationList">
+
     </div>
   </div>
-      <table id="reservationTable" class="table table-striped table-bordered" style="width:100%">
-      </table>
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="addReservationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <form id="reservationForm" class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Reserve</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <label for="inputService"><b>Service</b></label>
+            <select id="inputService" class="form-control" required></select>
+          </div>
+          <div class="form-row">
+            <label><b>Duration:</b></label>
+            <div id="duration"></div>
+          </div>
+          <div class="form-row">
+            <label for="inputDate"><b>Date</b></label>
+            <input id="inputDate" class="form-control" type="date" name="bday" required>
+          </div>
+          <div class="form-row">
+            <label for="inputSlot"><b>Time Slot</b></label>
+            <select id="inputSlot" class="custom-select" size="5" required></select>
+          </div>
+          <div class="form-row">
+            <label for="firstname"><b>First Name</b></label>
+            <input id="firstname" type="text" class="form-control" placeholder="First Name"/>
+          </div>
+          <div class="form-row">
+            <label for="lastname"><b>Last Name</b></label>
+            <input id="lastname" type="text" class="form-control" placeholder="Last Name"/>
+          </div>
+
+          <div class="form-row">
+            <label for="lastname"><b>Note</b></label>
+            <textarea id="message" type="text" class="form-control" placeholder="Note ..." rows="3"> </textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="reservationSubmitButton" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+  </div>
   </div>
   <!-- jquery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -84,93 +120,266 @@
   
   <script src="/js/owner_navbar.js"></script>
   <script>
+    var userSession = JSON.parse(sessionStorage.getItem("user"));
+    var reservations = [];
+    var services = [];
+    var groomers = [];
+    var dateTimeStart;
+    var dateTimeEnd;
+    var reservationListener = function(){};
+    var serviceListener = function(){};
+    var groomerListener = function(){};
+
+
+    var timeSlots = ["8:00 am","8:30 am","9:00 am","9:30 am","10:00 am","10:30 am","11:00 am","11:30 am",
+                      "12:00 pm","12:30 pm","1:00 pm","1:30 pm","2:00 pm","2:30 pm","3:00 pm","3:30 pm","4:00 pm","4:30 pm","5:00 pm","5:30 pm",
+                      "6:00 pm","6:30 pm","7:00 pm","7:30 pm","8:00 pm","8:30 pm","9:00 pm","9:30 pm","10:00 pm","10:30 pm","11:00 pm",];
     
-    var selectedTransaction = {};
+    $(document).ready( async function(){
+      $("#inputDate").val(moment().format("YYYY-MM-DD"));
+      $("#inputDate").prop("min", moment().format("YYYY-MM-DD"))
+      $("#inputDate").prop("max", moment().add(8, 'days').format("YYYY-MM-DD"));
 
-    var transactions = []
-    var pendingTransactions = [];
-    var checkedTransactions = [];
-    var fulfilledTransactions = [];
-    var cancelledTransactions = [];
-    var ongoingTransactions = [];
-    function resetTransactions(){
-      transactions = [],
-      selectedTransaction = {};
-      pendingTransactions = [];
-      checkedTransactions = [];
-      fulfilledTransactions = [];
-      cancelledTransactions = [];
-      ongoingTransactions = [];
-    }
-    $(document).ready(function() {
-      var user = JSON.parse(sessionStorage.getItem("user"));
-      var reservationDatatable = $('#reservationTable').DataTable({
-        stateSave: true,
-        select: {
-          style: 'single'
-        },
-        columns: [
-          { 
-            data: function(row){
-              return `
-              <td style="width: 70%">
-              </td>`
-            },
-            title: "Service",
-          },
-          { 
-            data: function(row){
-              return `
-              <td>
-                <div>
+      $("#addReservationButton").click(function(){
+        $("#addReservationModal").modal("show");
+      })
 
-                </div>
-              <td>`
-            },
-            title: "Type",
-          },
-          { 
-            data: function(row){
-              return `
-              <td>
-                <div>
-                  ${row.status}
-                </div>
-              <td>`
-            },
-            title: "Status",
-          },
-        ]
+      $("#inputService").change(function(e){
+        console.log("selected service: " + e.target.value);
+        renderSlots(moment($("#inputDate").val()).toDate());
+      })
+      $("#inputDate").blur(function(e){
+        console.log("selected date: " + e.target.value);
+        renderSlots(moment(e.target.value).toDate());
+      })
+      
+      $("#reservationForm").submit(reservationSubmit);
+
+      loadServices(userSession)
+      loadReservations(userSession);
+      loadGroomers(userSession);
+    })
+    async function reservationSubmit(e){
+      e.preventDefault();
+      disableReservationForm();
+      let service = services.find(s=>s.serviceDocId == $("#inputService").val());
+      let availableGroomers = [...groomers];
+      if(service == -1){
+        console.log("service not found!");
+        enableReservationForm();
+        alertify.error("Service not found!");
+        return false;
+      }
+      let dateTimeStart = moment($("#inputSlot").val());
+      let dateTimeEnd = moment(dateTimeStart).add( +service.duration,"m");
+      console.log("dateTimeStart: " + dateTimeStart.toDate());
+      console.log("dateTimeEnd: " + dateTimeEnd.toDate());
+      console.log("duration: "+ service.duration);
+
+
+      let dateTimeStartConflict = await firebase.firestore().collection("reservations")
+      .where("dateTimeStart", ">", dateTimeStart.toDate())
+      .where("dateTimeStart", "<", dateTimeEnd.toDate()).get();
+
+      let dateTimeEndConflict = await firebase.firestore().collection("reservations")
+      .where("dateTimeEnd", ">", dateTimeStart.toDate())
+      .where("dateTimeEnd", "<", dateTimeEnd.toDate()).get()
+
+      if( dateTimeStartConflict.docs.length > 0){
+        dateTimeStartConflict.docs.forEach((doc)=>{
+          availableGroomers = availableGroomers.filter(g=>g.groomerDocId != doc.data().groomerDocId)
+        });
+      }
+      if( dateTimeEndConflict.docs.length > 0 ){
+        dateTimeEndConflict.docs.forEach((doc)=>{
+          availableGroomers = availableGroomers.filter(g=>g.groomerDocId != doc.data().groomerDocId)
+        });
+      }
+      if(availableGroomers.length == 0){
+        console.log("no available groomers!");
+        alertify.error("No Available Groomers");
+        enableReservationForm();
+        return false;
+      }
+      let reserve = await firebase.firestore().collection("reservations").add({
+        status: "pending",
+        reason: "",
+        message: $("#message").val(),
+        petshopDocId: userSession.petshopDocId,
+        petshopName: userSession.petshopName,
+        dateTimeStart: dateTimeStart.toDate(),
+        dateTimeEnd: dateTimeEnd.toDate(),
+        dateTime: moment().toDate(),
+        serviceDocId: service.serviceDocId,
+        serviceName: service.serviceName,
+        servicePetTypes: service.petTypes,
+        minPrice: service.minPrice,
+        maxPrice: service.maxPrice,
+        duration: service.duration,
+        details: service.details,
+        customerDocId: "",
+        customerFirstname: $("#firstname").val(),
+        customerLastname: $("#lastname").val(),
+        groomerDocId: availableGroomers[0].groomerDocId,
+        groomerFirstname: availableGroomers[0].firstname,
+        groomerLastname: availableGroomers[0].lastname,
       });
+      alertify.success("Reservation Added!");
+      enableReservationForm();
+    }
+    async function renderSlots(date){
+      if(date)$("#inputSlot").html("");
+      $("#inputSlot").append(`
+        <option disabled>${moment(date).format('dddd - MM/DD/YYYY')}</option>
+      `);      
+      let service = services.find(item=>item.serviceDocId == $("#inputService").val());
 
-      reservationDatatable.on( 'select', function ( e, dt, type, indexes ) {
-        if( type === 'row' ){
-          var selectedTransaction = reservationDatatable.rows( indexes ).data();
-          $("#myModal").modal("show");
+      if(!moment(date).isValid()) return false;
+      if(service){}
+      else return false;
+
+      $("#duration").html(" "+service.duration + " minutes");
+      let usedSlots = reservations.filter(item=>moment(item.dateTimeStart).isSame(moment(date), 'day'));
+      console.log("reservations: ", reservations);
+      console.log("usedSlots: ", usedSlots);
+      if(service){
+        availableSlots = timeSlots.map((slot)=>{
+          return {
+            timeSlot: slot,
+            dateTimeSlot: moment(moment(date).format("MM/DD/YYYY ") + slot),
+            slots: groomers.length,
+          }
+        })
+        availableSlots = availableSlots.filter((slot, index)=>{
+          startIndex = index;
+          endIndex = index + (service.duration/30);
+
+          if( endIndex < availableSlots.length){
+            let groomerCount = groomers.length;          
+            for(let s of usedSlots){
+              if(availableSlots[startIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]') || availableSlots[endIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]')){
+                groomerCount--;
+              }
+            }
+            if(groomerCount){
+              slot.slots = groomerCount;
+              return true;
+            } 
+            else return false;
+          }
+          else return false;
+        })
+
+        availableSlots.forEach((slot)=>{
+          if(slot.dateTimeSlot.isSame(moment(),'day') && slot.dateTimeSlot.isBefore(moment())){
+          }
+          else{
+            $("#inputSlot").append(`
+              <option value="${slot.dateTimeSlot.toDate()}" class="pl-5">
+                ${slot.timeSlot} ${(slot.slots>1)?"- slots: "+slot.slots:""}
+              </option>
+            `)
+          }
+        })
+        
+      }
+
+    }
+    function renderServices(services){
+      services.forEach((service)=>{
+        $("#inputService").append(`
+          <option value="${service.serviceDocId}">
+            ${service.serviceName}
+          </option>
+        `);
+      })
+    }
+    async function loadServices(owner){
+      serviceListener();
+      serviceListener = firebase.firestore().collection("services").where("petshopDocId", "==", owner.petshopDocId)
+      .onSnapshot(async function(snapshot){
+        if(snapshot.docs.length){
+          services = [];
+          for(let doc of snapshot.docs){
+            let data = doc.data();
+            let id = doc.id;
+            services.push({
+              serviceDocId: id,
+              ...data,
+            });
+          }
+          renderServices(services);
         }
       });
+    }
+    async function loadReservations(owner){
+      reservationListener();
+      reservationListener = firebase.firestore().collection("reservations").where("petshopDocId", "==", owner.petshopDocId)
+      .onSnapshot(snapshot=>{
+        if(snapshot.docs.length){
+          reservations = [];
+          for(let doc of snapshot.docs){
+            let data = doc.data();
+            let id = doc.id;
 
-      firebase.firestore().collection("transactions").where("petshopDocId", "==", user.petshopDocId ).onSnapshot(function(snapshot){
-        resetTransactions();
-        snapshot.docs.forEach(function(doc){
-          console.log(doc)
-          var data = {
-            ...doc.data(),
+            if(moment(data.dateTimeStart.toDate()).isSameOrAfter(moment())){
+              reservations.push({
+                reservationDocId: id,
+                ...data,
+                dateTimeStart: moment(data.dateTimeStart.toDate()),
+                dateTimeEnd: moment(data.dateTimeEnd.toDate()),
+              });
+            }
           }
-          if(data.status == "pending") pendingTransactions.push(data);
-          else if(data.status == "checked") checkedTransactions.push(data)
-          else if(data.status == "fulfilled") fulfilledTransactions.push(data)
-          else if(data.status == "cancelled") cancelledTransactions.push(data)
-          else if(data.status == "appointed") ongoingTransactions.push(data)
-
-
-          transactions.push(data)
-        })
-        reservationDatatable.clear();
-        reservationDatatable.rows.add(transactions);
-        reservationDatatable.draw();
+          reservations.sort(function(a,b){
+            return b.dateTimeStart.toDate() - a.dateTimeStart.toDate();
+          });
+          
+          console.log("loaded reservations: ", reservations);
+          renderReservations(reservations);
+          renderSlots(moment($("#inputDate").val()).toDate());
+        }
+      });
+    }
+    function renderReservations(reservations){
+      $("#reservationList").html("");
+      reservations.forEach((r)=>{
+        $("#reservationList").prepend(`
+          <div class="row reservationItem rounded-5 shadow-lg p-3 mt-4 bg-white">
+            <div class="col">${r.serviceName}</div>
+            <div class="col">P${r.minPrice} - P${r.maxPrice}</div>
+            <div class="col">Serving ${ moment(r.dateTimeStart.toDate()).fromNow()}</div>
+          </div>
+        `);
       })
-    });
+    }
+    async function loadGroomers(owner){
+      var tempDocs = await firebase.firestore().collection("users").where("type", "==", "groomer")
+      .onSnapshot(snapshot=>{
+        console.log("total no of groomers: "+snapshot.docs.length);
+        if(snapshot.docs.length){
+          groomers = [];
+          for(let doc of snapshot.docs){
+            let data = doc.data();
+            let id = doc.id;  
+            if(data.status == "active" && data.petshopDocId == owner.petshopDocId){
+              groomers.push({
+                groomerDocId: id,
+                ...data,
+              });
+            }
+          }
+          console.log("no of groomers today: "+groomers.length);
+        }
+      })
+    }
+    function disableReservationForm(){
+      $("#reservationSubmitButton").prop("disabled", true);
+    }
+    function enableReservationForm(){
+      $("#reservationSubmitButton").prop("disabled", false);
+      $("#reservationSubmitButton").removeProp("disabled");
+    }
   </script>
 </body>
 </html>
