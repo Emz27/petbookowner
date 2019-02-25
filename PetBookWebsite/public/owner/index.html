@@ -152,6 +152,8 @@
     var currentServiceId = -1;
     var incomingServices = [];
     var currentServices = [];
+    var availableSlots = [];
+    var usedSlots = [];
 
     var reservationListener = function(){};
     var serviceListener = function(){};
@@ -192,14 +194,15 @@
       e.preventDefault();
       disableReservationForm();
       let service = services.find(s=>s.serviceDocId == $("#inputService").val());
-      let availableGroomers = [...groomers];
+      let availableGroomers = [...availableSlots[+$("#inputSlot").val()].groomers]
       if(service == -1){
         console.error("service not found!");
         enableReservationForm();
         alertify.error("Service not found!");
         return false;
       }
-      let dateTimeStart = moment($("#inputSlot").val());
+      console.log("inputSlot index: " +$("#inputSlot").val());
+      let dateTimeStart = moment(availableSlots[+$("#inputSlot").val()].dateTimeSlot);
       let dateTimeEnd = moment(dateTimeStart).add( +service.duration,"m");
       console.log("dateTimeStart: " + dateTimeStart.toDate());
       console.log("dateTimeEnd: " + dateTimeEnd.toDate());
@@ -230,6 +233,8 @@
         enableReservationForm();
         return false;
       }
+      availableGroomers.sort((a,b)=>b.workCount - a.workCount);
+      console.log("availableGroomers: ", availableGroomers);
       let reserve = await firebase.firestore().collection("reservations").add({
         status: "pending",
         reason: "",
@@ -258,6 +263,7 @@
     }
     async function renderSlots(date){
       if(date)$("#inputSlot").html("");
+      else return false;
       $("#inputSlot").append(`
         <option disabled>${moment(date).format('dddd - MM/DD/YYYY')}</option>
       `);      
@@ -268,7 +274,17 @@
       else return false;
 
       $("#duration").html(" "+service.duration + " minutes");
-      let usedSlots = reservations.filter(item=>moment(item.dateTimeStart).isSame(moment(date), 'day'));
+      groomers.forEach(gm=>gm.workCount=0);
+      usedSlots = reservations.filter(item=>{
+        if(moment(item.dateTimeStart).isSame(moment(date), 'day') && moment(item.dateTimeStart).isSameOrAfter(moment()) && item.status != "cancelled"){
+          try{
+            groomers.find(gm=>gm.groomerDocId == item.groomerDocId).workCount++;
+          }catch(e){console.log(e.message)}
+
+          return true;
+        }
+        else return false;
+      });
       console.log("reservations: ", reservations);
       console.log("usedSlots: ", usedSlots);
       if(service){
@@ -277,6 +293,7 @@
             timeSlot: slot,
             dateTimeSlot: moment(moment(date).format("MM/DD/YYYY ") + slot),
             slots: groomers.length,
+            groomers: [...groomers],
           }
         })
         availableSlots = availableSlots.filter((slot, index)=>{
@@ -284,28 +301,29 @@
           endIndex = index + (service.duration/30);
 
           if( endIndex < availableSlots.length){
-            let groomerCount = groomers.length;          
             for(let s of usedSlots){
               if(s.status != "cancelled" && (availableSlots[startIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]') || availableSlots[endIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]'))){
-                groomerCount--;
+                let groomerIndex = slot.groomers.findIndex(sg=>sg.groomerDocId == s.groomerDocId);
+                if(groomerIndex != -1){ 
+                  slot.groomers.splice(groomerIndex, 1);
+                }
               }
             }
-            if(groomerCount){
-              slot.slots = groomerCount;
+            if(slot.groomers.length){
               return true;
             } 
             else return false;
           }
           else return false;
         })
-
-        availableSlots.forEach((slot)=>{
+        
+        availableSlots.forEach((slot, index)=>{
           if(slot.dateTimeSlot.isSame(moment(),'day') && slot.dateTimeSlot.isBefore(moment())){
           }
           else{
             $("#inputSlot").append(`
-              <option value="${slot.dateTimeSlot.toDate()}" class="pl-5">
-                ${slot.timeSlot} ${(slot.slots>1)?"- slots: "+slot.slots:""}
+              <option value="${index}" class="pl-5">
+                ${slot.timeSlot} ${(slot.groomers.length>1)?"- slots: "+slot.groomers.length:""}
               </option>
             `)
           }
@@ -579,6 +597,7 @@
               });
             }
           }
+          console.log("groomers: ", groomers)
           console.log("no of groomers today: "+groomers.length);
         }
       })
