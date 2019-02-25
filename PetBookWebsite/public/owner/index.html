@@ -26,24 +26,47 @@
   <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Patrick Hand SC' rel='stylesheet'>
   <!-- Title -->
   <link rel="shortcut icon" href="/images/pet.jpg" />
   <title> Pet Book </title>
   <style>
-    .reservationItem{
-      shadow
+    #currentServing{
+      height: 50vh;
+      width: 100%;
     }
-    .reservationItem:hover{
-      background-color: green;
-      transition-duration: 1000ms;
+    #currentServingList{
+      overflow-y: auto;
     }
+    .col{
+      padding: 0;
+      margin: 0;
+    }
+
   </style>
 </head>
 <body>
-  <div class="container mt-5 p-5">
+  <div class="container mt-5 p-5 mw-100">
+    <div  style="overflow: hidden;" id="currentServing" class="row rounded-5 shadow-lg p-0 m-0 mb-3 bg-white">
+      <div id="currentServingView" class="col">
+
+      </div>
+      <div class="border border-right w-1 mt-3 mb-3"></div>
+      <div id="currentServingList" class="col-4" 
+        style="
+          position: relative;
+          right: -17px;
+          overflow-y: scroll;
+          padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+          box-sizing: content-box; /* So the width will be 100% + 17px */ 
+        "
+      >
+
+      </div>
+    </div>
     <button id="addReservationButton" type="button" class="btn btn-primary">Add Reservation</button>
-    
-      
+    <div class="border border-bottom h-1 mt-3 mb-3"></div>
     <div id="reservationList">
 
     </div>
@@ -129,13 +152,18 @@
     var reservationListener = function(){};
     var serviceListener = function(){};
     var groomerListener = function(){};
-
+    
 
     var timeSlots = ["8:00 am","8:30 am","9:00 am","9:30 am","10:00 am","10:30 am","11:00 am","11:30 am",
                       "12:00 pm","12:30 pm","1:00 pm","1:30 pm","2:00 pm","2:30 pm","3:00 pm","3:30 pm","4:00 pm","4:30 pm","5:00 pm","5:30 pm",
                       "6:00 pm","6:30 pm","7:00 pm","7:30 pm","8:00 pm","8:30 pm","9:00 pm","9:30 pm","10:00 pm","10:30 pm","11:00 pm",];
-    
     $(document).ready( async function(){
+      loadServices(userSession)
+      loadGroomers(userSession);
+      loadReservations(userSession);
+      var timer = window.setInterval(function(){
+        renderReservations(reservations);
+      }, 60000);
       $("#inputDate").val(moment().format("YYYY-MM-DD"));
       $("#inputDate").prop("min", moment().format("YYYY-MM-DD"))
       $("#inputDate").prop("max", moment().add(8, 'days').format("YYYY-MM-DD"));
@@ -155,9 +183,6 @@
       
       $("#reservationForm").submit(reservationSubmit);
 
-      loadServices(userSession)
-      loadReservations(userSession);
-      loadGroomers(userSession);
     })
     async function reservationSubmit(e){
       e.preventDefault();
@@ -165,7 +190,7 @@
       let service = services.find(s=>s.serviceDocId == $("#inputService").val());
       let availableGroomers = [...groomers];
       if(service == -1){
-        console.log("service not found!");
+        console.error("service not found!");
         enableReservationForm();
         alertify.error("Service not found!");
         return false;
@@ -257,7 +282,7 @@
           if( endIndex < availableSlots.length){
             let groomerCount = groomers.length;          
             for(let s of usedSlots){
-              if(availableSlots[startIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]') || availableSlots[endIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]')){
+              if(s.status != "cancelled" && (availableSlots[startIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]') || availableSlots[endIndex].dateTimeSlot.isBetween(s.dateTimeStart, s.dateTimeEnd, null, '[]'))){
                 groomerCount--;
               }
             }
@@ -318,18 +343,16 @@
       .onSnapshot(snapshot=>{
         if(snapshot.docs.length){
           reservations = [];
+          currentServing = [];
           for(let doc of snapshot.docs){
             let data = doc.data();
             let id = doc.id;
-
-            if(moment(data.dateTimeStart.toDate()).isSameOrAfter(moment())){
-              reservations.push({
-                reservationDocId: id,
-                ...data,
-                dateTimeStart: moment(data.dateTimeStart.toDate()),
-                dateTimeEnd: moment(data.dateTimeEnd.toDate()),
-              });
-            }
+            reservations.push({
+              reservationDocId: id,
+              ...data,
+              dateTimeStart: moment(data.dateTimeStart.toDate()),
+              dateTimeEnd: moment(data.dateTimeEnd.toDate()),
+            });
           }
           reservations.sort(function(a,b){
             return b.dateTimeStart.toDate() - a.dateTimeStart.toDate();
@@ -343,15 +366,184 @@
     }
     function renderReservations(reservations){
       $("#reservationList").html("");
+      $("#currentServingList").html("");
+
+      let incoming = []
+      let current = [];
+
       reservations.forEach((r)=>{
-        $("#reservationList").prepend(`
-          <div class="row reservationItem rounded-5 shadow-lg p-3 mt-4 bg-white">
-            <div class="col">${r.serviceName}</div>
-            <div class="col">P${r.minPrice} - P${r.maxPrice}</div>
-            <div class="col">Serving ${ moment(r.dateTimeStart.toDate()).fromNow()}</div>
-          </div>
-        `);
+        if(r.status != "cancelled" && moment(r.dateTimeStart.toDate()).isSameOrAfter(moment())){
+          incoming.push(r);
+        }
+        else if(r.status != "cancelled" && moment().isBetween(r.dateTimeStart.toDate(),r.dateTimeEnd.toDate(),null,"[]")){
+          current.push(r);
+        } 
       })
+      if(incoming.length){
+        incoming.forEach(r=>{
+          $("#reservationList").prepend(`
+            <div style="font-family: 'Rubik';" class="row rounded-5 shadow-lg p-3 mt-4 bg-white">
+              <div class="col-2 text-center">
+                <div>
+                  ${r.serviceName}
+                </div>
+                <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
+                  Service Name
+                </div>
+              </div>
+              <div class="col-2 text-center">
+                <div>
+                  P${r.minPrice} - P${r.maxPrice}
+                </div>
+                <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
+                  Price Range
+                </div>
+              </div>
+              <div class="col-2 text-center">
+                <div>
+                  ${moment(r.dateTimeStart).format("MM/DD/YYYY")}
+                </div>
+                <div>
+                  ${moment(r.dateTimeStart).format("h:mm a")}
+                </div>
+              </div>
+              <div class="col pl-2 pr-2 text-center"><b>${r.groomerFirstname} ${r.groomerLastname}</b> serving <b>${ moment(r.dateTimeStart.toDate()).fromNow()}</b></div>
+              <div>
+                <button type="button" class="close" aria-label="Close"
+                  onclick="cancelReservation('${r.reservationDocId}')"
+                >
+                <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          `);
+        })
+      }
+      else {
+        $("#reservationList").html(`
+          <div class="text-center text-muted">No Pending Reservations</div>
+        `);
+      }
+      if(current.length){
+        current.forEach(r=>{
+          let currentDuration = moment.duration(moment(moment()).diff(r.dateTimeStart));
+          let totalDuration = moment.duration(moment(r.dateTimeEnd).diff(moment(r.dateTimeStart)));
+          let listItem = $(`
+          <div style="font-family: 'Rubik';" class="currentServingItem container-fluid p-3 bg-white">
+            <div class="row m-0">
+              <div class="col-7 text-center">
+                <b>${r.groomerFirstname} ${r.groomerLastname}</b>
+              </div>
+              <div class="col-5"> 
+                ${currentDuration.get('hours')}:${currentDuration.get('minutes')}/${totalDuration.get('hours')}:${totalDuration.get('minutes')}
+              </div>
+            </div>
+            <div class="row m-0">
+              <div class="col-7 text-center">
+                ${r.serviceName}
+              </div> 
+            </div>
+            <div class="border border-botton w-1 ml-3 mr-3"></div>
+          </div>
+          `);
+          listItem.click(function(e){
+            renderCurrentServingView(r);
+          })
+          listItem.on('mouseenter',function(){
+            hoverItem(this,-10, 800, 400)
+          });
+          listItem.on('mouseleave', function(){
+            hoverItem(this,0, 600, 300)
+          });
+          $("#currentServingList").prepend(listItem);
+        })
+      }
+      else {
+        $("#currentServingList").html(`
+          <div class="text-muted h-100 p-auto font-weight-light font-italic">Not Serving Right Now</div>
+        `)
+      }
+      
+    }
+    function renderCurrentServingView(r){
+      let currentDuration = moment.duration(moment(moment()).diff(r.dateTimeStart));
+      let totalDuration = moment.duration(moment(r.dateTimeEnd).diff(moment(r.dateTimeStart)));
+      let currentView  = $(`
+      <div style="font-family: 'Rubik';" class="col d-flex flex-column pt-2 h-100">
+      <div class="row">
+          <div class="col text-center">
+            <div>
+              ${r.groomerFirstname} ${r.groomerLastname}
+            </div>
+            <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
+              Groomer Name
+            </div>
+          </div>
+          <div class="col text-center">
+            <div>
+              ${r.serviceName}
+            </div>
+            <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
+              Service Name
+            </div>
+          </div>
+          <div class="col text-center">
+            <div>
+              P${r.minPrice} - P${r.maxPrice}
+            </div>
+            <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
+              Price Range
+            </div>
+          </div>
+          <div class="col text-center">
+            <div>
+                ${currentDuration.get('hours')}:${currentDuration.get('minutes')}/${totalDuration.get('hours')}:${totalDuration.get('minutes')}
+            </div>
+            <div>
+              ${moment(r.dateTimeEnd).format("h:mm a")}
+            </div>
+          </div>
+        </div>
+
+        <div class="border border-botton w-1 ml-3 mr-3"></div>
+        <div class="col d-flex">
+          <div class="p-3">
+            <div style="
+              border-radius: 150px;
+              background: #73AD21;
+              padding: 20px; 
+              width: 80px;
+              height: 20px; 
+            " class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white" >
+            <span>Others</span>
+            </div>
+            <div style="
+              border-radius: 150px;
+              background: #73AD21;
+              padding: 20px; 
+              width: 80px;
+              height: 20px; 
+            "  class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white">
+            <span>Stream</span>
+            </div>
+            <div style="
+              border-radius: 150px;
+              background: #73AD21;
+              padding: 20px; 
+              width: 80px;
+              height: 20px; 
+            " class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white">
+            <span>Cancel</span>
+            </div>
+
+          </div>
+          <div class="col d-flex justify-content-center align-items-center bg-light m-3">
+            <span class="">Live Feed<span>
+          </div> 
+        </div>
+      </div>
+      `);
+      $("#currentServingView").html(currentView);
     }
     async function loadGroomers(owner){
       var tempDocs = await firebase.firestore().collection("users").where("type", "==", "groomer")
@@ -379,6 +571,37 @@
     function enableReservationForm(){
       $("#reservationSubmitButton").prop("disabled", false);
       $("#reservationSubmitButton").removeProp("disabled");
+    }
+    async function cancelReservation(reservationDocId){
+      console.log(reservationDocId)
+      alertify.confirm(
+        ' ',
+        'Click "Ok" button to cancel the reservation', 
+        async function(){ 
+          try{
+            await firebase.firestore().collection("reservations").doc(reservationDocId).update({
+              status: "cancelled"
+            });
+            alertify.success("Reservation Cancelled!");
+          }
+          catch(e){
+            console.log(e);
+            alertify.error("There was a problem with the request\n"+e.message);
+          }
+        }, 
+        function(){ 
+        }
+      );
+    }
+    function hoverItem(target, translateX, duration, elasticity){
+      anime.remove(target);
+      anime({
+        targets: target,
+        // targets: ".currentServingItem",
+        translateX: translateX,
+        duration: duration,
+        elasticity: elasticity
+      });
     }
   </script>
 </body>
