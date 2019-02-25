@@ -32,11 +32,11 @@
   <link rel="shortcut icon" href="/images/pet.jpg" />
   <title> Pet Book </title>
   <style>
-    #currentServing{
+    #currentService{
       height: 50vh;
       width: 100%;
     }
-    #currentServingList{
+    #currentServiceList{
       overflow-y: auto;
     }
     .col{
@@ -48,12 +48,12 @@
 </head>
 <body>
   <div class="container mt-5 p-5 mw-100">
-    <div  style="overflow: hidden;" id="currentServing" class="row rounded-5 shadow-lg p-0 m-0 mb-3 bg-white">
-      <div id="currentServingView" class="col">
+    <div  style="overflow: hidden;" id="currentService" class="row rounded-5 shadow-lg p-0 m-0 mb-3 bg-white">
+      <div id="currentServiceView" class="col d-flex justify-content-center align-items-center">
 
       </div>
       <div class="border border-right w-1 mt-3 mb-3"></div>
-      <div id="currentServingList" class="col-4" 
+      <div id="currentServiceList" class="col-4" 
         style="
           position: relative;
           right: -17px;
@@ -149,6 +149,10 @@
     var groomers = [];
     var dateTimeStart;
     var dateTimeEnd;
+    var currentServiceId = -1;
+    var incomingServices = [];
+    var currentServices = [];
+
     var reservationListener = function(){};
     var serviceListener = function(){};
     var groomerListener = function(){};
@@ -343,7 +347,7 @@
       .onSnapshot(snapshot=>{
         if(snapshot.docs.length){
           reservations = [];
-          currentServing = [];
+          currentService = [];
           for(let doc of snapshot.docs){
             let data = doc.data();
             let id = doc.id;
@@ -353,11 +357,11 @@
               dateTimeStart: moment(data.dateTimeStart.toDate()),
               dateTimeEnd: moment(data.dateTimeEnd.toDate()),
             });
+            
           }
           reservations.sort(function(a,b){
             return b.dateTimeStart.toDate() - a.dateTimeStart.toDate();
           });
-          
           console.log("loaded reservations: ", reservations);
           renderReservations(reservations);
           renderSlots(moment($("#inputDate").val()).toDate());
@@ -366,21 +370,19 @@
     }
     function renderReservations(reservations){
       $("#reservationList").html("");
-      $("#currentServingList").html("");
-
-      let incoming = []
-      let current = [];
-
+      $("#currentServiceList").html("");
+      incomingServices = [];
+      currentServices = [];
       reservations.forEach((r)=>{
         if(r.status != "cancelled" && moment(r.dateTimeStart.toDate()).isSameOrAfter(moment())){
-          incoming.push(r);
+          incomingServices.push(r);
         }
         else if(r.status != "cancelled" && moment().isBetween(r.dateTimeStart.toDate(),r.dateTimeEnd.toDate(),null,"[]")){
-          current.push(r);
+          currentServices.push(r);
         } 
       })
-      if(incoming.length){
-        incoming.forEach(r=>{
+      if(incomingServices.length){
+        incomingServices.forEach(r=>{
           $("#reservationList").prepend(`
             <div style="font-family: 'Rubik';" class="row rounded-5 shadow-lg p-3 mt-4 bg-white">
               <div class="col-2 text-center">
@@ -424,12 +426,12 @@
           <div class="text-center text-muted">No Pending Reservations</div>
         `);
       }
-      if(current.length){
-        current.forEach(r=>{
+      if(currentServices.length){
+        currentServices.forEach(r=>{
           let currentDuration = moment.duration(moment(moment()).diff(r.dateTimeStart));
           let totalDuration = moment.duration(moment(r.dateTimeEnd).diff(moment(r.dateTimeStart)));
           let listItem = $(`
-          <div style="font-family: 'Rubik';" class="currentServingItem container-fluid p-3 bg-white">
+          <div style="font-family: 'Rubik';" class="currentServiceItem container-fluid p-3 bg-white">
             <div class="row m-0">
               <div class="col-7 text-center">
                 <b>${r.groomerFirstname} ${r.groomerLastname}</b>
@@ -447,7 +449,8 @@
           </div>
           `);
           listItem.click(function(e){
-            renderCurrentServingView(r);
+            currentServiceId = r.reservationDocId;
+            renderCurrentServiceView();
           })
           listItem.on('mouseenter',function(){
             hoverItem(this,-10, 800, 400)
@@ -455,17 +458,32 @@
           listItem.on('mouseleave', function(){
             hoverItem(this,0, 600, 300)
           });
-          $("#currentServingList").prepend(listItem);
+          $("#currentServiceList").prepend(listItem);
         })
+        renderCurrentServiceView();
       }
       else {
-        $("#currentServingList").html(`
-          <div class="text-muted h-100 p-auto font-weight-light font-italic">Not Serving Right Now</div>
+        $("#currentServiceList").html(`
+          <div class="col h-100 d-flex justify-content-center align-items-center">
+            <span class="text-muted font-weight-light font-italic">No Ongoing Services</div>
+          </div>
+        `)
+        $("#currentServiceView").html(`
+          <span class="text-muted font-weight-light font-italic">No Ongoing Services</div>
         `)
       }
       
     }
-    function renderCurrentServingView(r){
+    function renderCurrentServiceView(){
+      let r = currentServices.find(cs=>cs.reservationDocId == currentServiceId);
+      if(r){
+      }
+      else {
+        $("#currentServiceView").html(`
+          <span class="text-muted font-weight-light font-italic">Select from the <span class="font-weight-bold">right panel</span> to view ongoing services</div>
+        `)
+        return false;
+      }
       let currentDuration = moment.duration(moment(moment()).diff(r.dateTimeStart));
       let totalDuration = moment.duration(moment(r.dateTimeEnd).diff(moment(r.dateTimeStart)));
       let currentView  = $(`
@@ -543,7 +561,7 @@
         </div>
       </div>
       `);
-      $("#currentServingView").html(currentView);
+      $("#currentServiceView").html(currentView);
     }
     async function loadGroomers(owner){
       var tempDocs = await firebase.firestore().collection("users").where("type", "==", "groomer")
@@ -597,7 +615,7 @@
       anime.remove(target);
       anime({
         targets: target,
-        // targets: ".currentServingItem",
+        // targets: ".currentServiceItem",
         translateX: translateX,
         duration: duration,
         elasticity: elasticity
