@@ -33,27 +33,28 @@
   <title> Pet Book </title>
   <style>
     #currentService{
-      height: 50vh;
+      height: 60vh;
       width: 100%;
     }
     #currentServiceList{
       overflow-y: auto;
     }
-    .col{
-      padding: 0;
-      margin: 0;
+    .row, .col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12{
+      padding: 0px;
+      margin: 0px;
     }
+
 
   </style>
 </head>
 <body>
-  <div class="container mt-5 p-5 mw-100">
+  <div class="container pl-5 pr-5 mw-100">
     <div  style="overflow: hidden;" id="currentService" class="row rounded-5 shadow-lg p-0 m-0 mb-3 bg-white">
       <div id="currentServiceView" class="col d-flex justify-content-center align-items-center">
 
       </div>
       <div class="border border-right w-1 mt-3 mb-3"></div>
-      <div id="currentServiceList" class="col-4" 
+      <div id="currentServiceList" class="col-3 m-0 p-0" 
         style="
           position: relative;
           right: -17px;
@@ -154,11 +155,16 @@
     var currentServices = [];
     var availableSlots = [];
     var usedSlots = [];
+    var videoDevices = [];
+    var audioDevices = [];
+    var mediaStreams = [];
+    var peerConnections = [];
 
     var reservationListener = function(){};
     var serviceListener = function(){};
     var groomerListener = function(){};
     
+    loadDevices();
 
     var timeSlots = ["8:00 am","8:30 am","9:00 am","9:30 am","10:00 am","10:30 am","11:00 am","11:30 am",
                       "12:00 pm","12:30 pm","1:00 pm","1:30 pm","2:00 pm","2:30 pm","3:00 pm","3:30 pm","4:00 pm","4:30 pm","5:00 pm","5:30 pm",
@@ -279,7 +285,7 @@
         if(moment(item.dateTimeStart).isSame(moment(date), 'day') && moment(item.dateTimeStart).isSameOrAfter(moment()) && item.status != "cancelled"){
           try{
             groomers.find(gm=>gm.groomerDocId == item.groomerDocId).workCount++;
-          }catch(e){console.log(e.message)}
+          }catch(e){console.error(e.message)}
 
           return true;
         }
@@ -394,9 +400,11 @@
       reservations.forEach((r)=>{
         if(r.status != "cancelled" && moment(r.dateTimeStart.toDate()).isSameOrAfter(moment())){
           incomingServices.push(r);
+          currentServices.push(r);
+
         }
         else if(r.status != "cancelled" && moment().isBetween(r.dateTimeStart.toDate(),r.dateTimeEnd.toDate(),null,"[]")){
-          currentServices.push(r);
+          // currentServices.push(r);
         } 
       })
       if(incomingServices.length){
@@ -413,10 +421,12 @@
               </div>
               <div class="col-2 text-center">
                 <div>
-                  P${r.minPrice} - P${r.maxPrice}
+                  ${(r.customerFirstname || r.customerLastname)?
+                  `${r.customerFirstname} ${r.customerLastname}`
+                  :"No Name"}
                 </div>
                 <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
-                  Price Range
+                  Customer Name
                 </div>
               </div>
               <div class="col-2 text-center">
@@ -449,21 +459,16 @@
           let currentDuration = moment.duration(moment(moment()).diff(r.dateTimeStart));
           let totalDuration = moment.duration(moment(r.dateTimeEnd).diff(moment(r.dateTimeStart)));
           let listItem = $(`
-          <div style="font-family: 'Rubik';" class="currentServiceItem container-fluid p-3 bg-white">
+          <div style="font-family: 'Rubik';" class="currentServiceItem mt-3 p-0 bg-white">
             <div class="row m-0">
               <div class="col-7 text-center">
-                <b>${r.groomerFirstname} ${r.groomerLastname}</b>
+                <b>${r.groomerFirstname}</b>
               </div>
               <div class="col-5"> 
                 ${currentDuration.get('hours')}:${currentDuration.get('minutes')}/${totalDuration.get('hours')}:${totalDuration.get('minutes')}
               </div>
             </div>
-            <div class="row m-0">
-              <div class="col-7 text-center">
-                ${r.serviceName}
-              </div> 
-            </div>
-            <div class="border border-botton w-1 ml-3 mr-3"></div>
+            <div class="border border-bottom h-0 ml-3 mr-3"></div>
           </div>
           `);
           listItem.click(function(e){
@@ -497,6 +502,7 @@
       if(r){
       }
       else {
+        currentServiceId = -1;
         $("#currentServiceView").html(`
           <span class="text-muted font-weight-light font-italic">Select from the <span class="font-weight-bold">right panel</span> to view ongoing services</div>
         `)
@@ -512,7 +518,7 @@
               ${r.groomerFirstname} ${r.groomerLastname}
             </div>
             <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
-              Groomer Name
+              Groomer
             </div>
           </div>
           <div class="col text-center">
@@ -520,7 +526,7 @@
               ${r.serviceName}
             </div>
             <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
-              Service Name
+              Service
             </div>
           </div>
           <div class="col text-center">
@@ -528,7 +534,7 @@
               P${r.minPrice} - P${r.maxPrice}
             </div>
             <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
-              Price Range
+              Price
             </div>
           </div>
           <div class="col text-center">
@@ -541,45 +547,92 @@
           </div>
         </div>
 
-        <div class="border border-botton w-1 ml-3 mr-3"></div>
+        <div class="border border-bottom w-1 ml-3 mr-3"></div>
         <div class="col d-flex">
+          <div class="col-3 text-center">
+            <div>
+              ${(r.customerFirstname || r.customerLastname)?
+              `${r.customerFirstname} ${r.customerLastname}`
+              :"No Name"}
+            </div>
+            <div style="font-family: 'Patrick Hand SC'; font-size: 12px;">
+              Customer Name
+            </div>
+            <div style="font-family: 'Patrick Hand SC'; font-size: 12px;" class="pl-3 pr-3 mt-3 text-left">
+              Note
+            </div>
+            <div  class="pl-3 pr-3 mt-3 text-left font-weight-light">
+              ${(r.message)?r.message:`None`}
+            </div>
+          </div>
+
+          <div class="border border-right w-1 mt-3 mb-3"></div>
+
           <div class="p-3">
-            <div style="
-              border-radius: 150px;
-              background: #73AD21;
-              padding: 20px; 
-              width: 80px;
-              height: 20px; 
-            " class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white" >
-            <span>Others</span>
-            </div>
-            <div style="
-              border-radius: 150px;
-              background: #73AD21;
-              padding: 20px; 
-              width: 80px;
-              height: 20px; 
-            "  class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white">
-            <span>Stream</span>
-            </div>
-            <div style="
-              border-radius: 150px;
-              background: #73AD21;
-              padding: 20px; 
-              width: 80px;
-              height: 20px; 
-            " class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white">
-            <span>Cancel</span>
-            </div>
+            <a 
+              onclick="stopStream('${currentServiceId}')"
+              href="#"
+              style="
+                border-radius: 150px;
+                background: #73AD21;
+                padding: 20px; 
+                width: 80px;
+                height: 20px; 
+              "  class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white">
+              <span>Stop Stream</span>
+            </a>
+            <a 
+              onclick="startStream('${currentServiceId}')"
+              href="#"
+              style="
+                border-radius: 150px;
+                background: #73AD21;
+                padding: 20px; 
+                width: 80px;
+                height: 20px; 
+              "  class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white">
+              <span>Start Stream</span>
+            </a>
+            <a 
+              onclick="cancelReservation('${currentServiceId}')"
+              href="#" 
+              style="
+                display: block;
+                border-radius: 150px;
+                background: #73AD21;
+                padding: 20px; 
+                width: 80px;
+                height: 20px; 
+              " class="col d-flex justify-content-center align-items-center mb-2 text-center font-weight-bold text-white">
+              <span>Cancel</span>
+            </a>
 
           </div>
-          <div class="col d-flex justify-content-center align-items-center bg-light m-3">
-            <span class="">Live Feed<span>
+          <div class="col d-flex flex-column p-3">
+            <div class="col d-flex justify-content-center align-items-center bg-light">
+              <!-- ${(r.customerDocId)?`<span> . . . </span>`:`<span class="font-italic font-weight-light">Live Feed is not available for walk-in customers<span>`} -->
+              <video id="videoCanvas" class="col" autoplay playsinline ></video>
+            </div> 
+            <div class="row m-0">
+              <div class="col"> 
+                <select id="videoSelect" onchange="changeDevice(this,'${r.reservationDocId}')" id="videoSelect" class="form-control form-control-sm"> 
+                  <option value="" disabled selected>Select Video Device</option>
+                  ${videoDevices.map(d=>{
+                    return `
+                      <option ${(d.deviceId == r.videoDeviceId)?`selected`:``} value="${d.deviceId}">
+                        ${d.label}
+                      </option>
+                    `
+                  }).join()}                 
+                </select>
+              </div>
+            </div>
           </div> 
         </div>
       </div>
       `);
       $("#currentServiceView").html(currentView);
+      renderVideo(r);
     }
     async function loadGroomers(owner){
       var tempDocs = await firebase.firestore().collection("users").where("type", "==", "groomer")
@@ -611,24 +664,22 @@
     }
     async function cancelReservation(reservationDocId){
       console.log(reservationDocId)
-      alertify.confirm(
-        ' ',
-        'Click "Ok" button to cancel the reservation', 
-        async function(){ 
-          try{
+      alertify.prompt( 'Cancel Reservation','Reason', ''
+      , async function(evt, value) { 
+        try{
             await firebase.firestore().collection("reservations").doc(reservationDocId).update({
-              status: "cancelled"
+              status: "cancelled",
+              dateTimeCancelled: moment().toDate(),
+              cancelReason: value,
             });
             alertify.success("Reservation Cancelled!");
           }
           catch(e){
-            console.log(e);
+            console.error(e);
             alertify.error("There was a problem with the request\n"+e.message);
           }
-        }, 
-        function(){ 
-        }
-      );
+      }
+      , function() {  });
     }
     function hoverItem(target, translateX, duration, elasticity){
       anime.remove(target);
@@ -639,6 +690,160 @@
         duration: duration,
         elasticity: elasticity
       });
+    }
+    async function loadDevices(reservation){
+      videoDevices = [];
+      audioDevices = [];
+      try{
+        let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        console.log("Permission Granted ...");
+        stream.getTracks().forEach(track => track.stop());
+        let devices = await navigator.mediaDevices.enumerateDevices();
+        devices.forEach(function(device) {
+          if(device.kind === 'videoinput') videoDevices.push(device);
+          else if(device.kind == 'audioinput') audioDevices.push(device);
+        })
+      }
+      catch(e){
+        console.error(e.message); 
+      }
+    }
+    async function renderVideo(reservation){
+      let videoCanvas = document.querySelector('#videoCanvas');
+      if(reservation.mediaStreamId){
+        let stream = mediaStreams.find(ms=>ms.id == reservation.mediaStreamId);
+        if(stream){
+          videoCanvas.srcObject = stream;
+        } 
+      }
+    }
+    function changeDevice(select, reservationDocId){
+      console.log(videoDevices);
+      console.log(audioDevices);
+      let value= $(select).val();
+      let reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
+      if( value && reservation){
+        console.log("video device id changed! : " + value);
+        let videoDevice = videoDevices.find(v=>v.deviceId == value);
+        if(videoDevice){
+          console.log("videoDevice loaded ...");
+          reservation.videoDeviceId = value;
+          let audioDevice = audioDevices.find(a=>a.groupId == videoDevice.groupId);
+          if(audioDevice){
+            console.log("audioDevice loaded ...");
+            reservation.audioDeviceId = audioDevice.deviceId;
+          }
+          else{
+            console.log(`audio device not found, resorting to 'default' ...`)
+            reservation.audioDeviceId = 'communications';
+          }
+        }
+        else {
+          console.log(`video device not found!`)
+          reservation.videoDeviceId = "";
+          reservation.audioDeviceId = "communications";
+        }
+      }
+    }
+    async function startStream(reservationDocId){
+      let reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
+      if(reservation == -1){
+        alertify.error("Reservation does not exist");
+        return false;
+      }
+      let pc = "";
+      let stream = mediaStreams.find(ms=>ms.id == reservation.mediaStreamId);
+      if(!stream){
+        try{
+          let constraint = {
+            audio: {deviceId: reservation.audioDeviceId},
+            video: {deviceId: reservation.videoDeviceId},
+          }
+          stream = await navigator.mediaDevices.getUserMedia(constraint);
+          mediaStreams.push(stream);
+          reservation.mediaStreamId = stream.id;
+        }
+        catch(e){
+          console.error(e);
+        }
+      }
+      if(stream){
+        var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+        let iceCandidates = [];
+
+        pc = new RTCPeerConnection(configuration);
+        peerConnections.push(pc);
+        pc.addEventListener('icecandidate', async (event) => {
+          if(event.candidate == null || event.candidate === "") iceCandidates.push(null);
+          else{
+            iceCandidates.push(event.candidate.toJSON());
+          } 
+          if(event.candidate == null || event.candidate == ""){
+            await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+              localIceCandidates: iceCandidates
+            });
+            console.log("sent: Shop ICE Candidate to truck "+reservation.reservationDocId);
+            console.log("\nReady to Connect ...\n");
+          }
+        });
+        pc.addEventListener('iceconnectionstatechange', async (event) =>{
+          var connectionState = event.target.iceConnectionState;
+
+          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+            status: connectionState,
+          })
+          console.log("iceStateChange:"+event.target.iceConnectionState);
+          if (connectionState  === 'completed') {
+          }
+          else if (connectionState  === 'connected') {
+
+          }
+          else if (connectionState  == "failed") {
+
+          }
+        });
+        stream.getTracks().forEach(track => pc.addTrack(track, stream));
+
+        try {
+          console.log('createOffer start');
+          const desc = await pc.createOffer();
+          await pc.setLocalDescription(desc);
+          console.log(desc);
+          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+            mediaStreamId: stream.id,
+            videoDeviceId: reservation.videoDeviceId,
+            audioDeviceId: reservation.audioDeviceId,
+            localDescription: desc.toJSON(),
+            remoteIceCandidateStatus: "pending",
+            remoteDescriptionStatus: "pending",
+            status: "new",
+          });
+          renderVideo(reservation);
+        } catch (e) {
+          console.error(`Failed to create session description: ${e.toString()}`);
+        }
+      }
+    }
+    function stopStream(reservationDocId){
+      let reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
+      if(!reservation){
+        alertify.error("Reservation Not Found ...");
+        return false;
+      }
+      let streamIndex = mediaStreams.findIndex(ms=>ms.id == reservation.mediaStreamId);
+      if(streamIndex >= 0){
+        mediaStreams[streamIndex].getTracks().forEach(track => track.stop());
+        mediaStreams.splice(streamIndex, 1);
+      }
+      try{
+        await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+          mediaStreamId: "",
+        })
+      }
+      catch(e){
+        console.error(e.message);
+      }
+      
     }
   </script>
 </body>
