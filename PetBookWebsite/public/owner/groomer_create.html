@@ -100,7 +100,7 @@
         var gender = $("input[name='gender']").val();
 
         try{
-          var user = JSON.parse(sessionStorage.getItem("user"));
+          var user = JSON.parse(localStorage.getItem("user"));
           console.log(user)
           await firebase.firestore().collection("users").add({
             petshopDocId: user.petshopDocId,

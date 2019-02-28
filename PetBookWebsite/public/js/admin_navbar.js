@@ -33,7 +33,7 @@
 $(document).ready(function(){
 
   $("#logoutButton").click(function(){
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.href = "/login.html";
   })
 

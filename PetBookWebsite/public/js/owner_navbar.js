@@ -49,14 +49,14 @@
 })()
 
 $(document).ready(function(){
-  var user = JSON.parse(sessionStorage.getItem("user"));
+  var user = JSON.parse(localStorage.getItem("user"));
   $("#userLink").html(user.firstname+" "+user.lastname + "&nbsp&nbsp&nbsp&nbsp");
   if(window.location.pathname.includes("reservation") || window.location.pathname.includes("index")) $("#reservationLink").addClass("active");
   else if(window.location.pathname.includes("groomer")) $("#groomerLink").addClass("active");
   else if(window.location.pathname.includes("service")) $("#serviceLink").addClass("active");
 
   $("#logoutButton").click(function(){
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.href = "/login.html";
   })
 

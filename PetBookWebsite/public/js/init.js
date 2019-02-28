@@ -23,7 +23,7 @@ db.settings({
 
 // session checker
 (async function(){
-  var userSession = JSON.parse(sessionStorage.getItem("user"));
+  var userSession = JSON.parse(localStorage.getItem("user"));
   console.log("userSession: ", userSession)
   if(userSession){
     try{
@@ -31,11 +31,12 @@ db.settings({
       
       var userResult = await firebase.firestore().collection("users").where("username", "==", userSession.username).get()
       if(userResult.docs.length == 0){
-        sessionStorage.clear();
+        localStorage.clear();
         location.replace('/login.html');
       }
       else if( !window.location.pathname.includes("login.html") 
           && !window.location.pathname.includes("register.html")
+          && !window.location.pathname.includes("stream.html")
           && !window.location.pathname.includes("/"+type+"/")
       ){
         location.replace("/"+type+"/index.html");

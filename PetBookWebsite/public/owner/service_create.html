@@ -196,7 +196,7 @@
   
         if($(".is-invalid").length == 0){
           try{
-            var user = JSON.parse(sessionStorage.getItem("user"));
+            var user = JSON.parse(localStorage.getItem("user"));
             console.log(user);
             let service = await firebase.firestore().collection("services").doc();
             for( let image of images){

@@ -170,7 +170,7 @@
           addError("Invalid Username and Password")
         }
         if($(".is-invalid").length == 0){
-          sessionStorage.setItem("user", JSON.stringify(userData));
+          localStorage.setItem("user", JSON.stringify(userData));
           window.location.href = "/"+userData.type+"/index.html";
         }
       });

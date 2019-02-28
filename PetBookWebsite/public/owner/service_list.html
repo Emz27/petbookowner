@@ -54,7 +54,7 @@
   
   <script src="/js/owner_navbar.js"></script>
   <script>
-    var userSession = JSON.parse(sessionStorage.getItem("user"));
+    var userSession = JSON.parse(localStorage.getItem("user"));
     console.log(userSession);
     $(document).ready(function() {
       var serviceDatatable = $('#serviceTable').DataTable({
