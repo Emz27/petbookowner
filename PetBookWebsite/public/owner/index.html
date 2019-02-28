@@ -132,11 +132,6 @@
   <!-- notificaton -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/alertify.min.js"></script>
 
-  <!-- datatables -->
-  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-  <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-  
   <!-- animation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script>
   <!-- moment  -->
@@ -144,7 +139,7 @@
   
   <script src="/js/owner_navbar.js"></script>
   <script>
-    var userSession = JSON.parse(sessionStorage.getItem("user"));
+    var userSession = JSON.parse(localStorage.getItem("user"));
     var reservations = [];
     var services = [];
     var groomers = [];
@@ -155,16 +150,11 @@
     var currentServices = [];
     var availableSlots = [];
     var usedSlots = [];
-    var videoDevices = [];
-    var audioDevices = [];
-    var mediaStreams = [];
-    var peerConnections = [];
 
     var reservationListener = function(){};
     var serviceListener = function(){};
     var groomerListener = function(){};
     
-    loadDevices();
 
     var timeSlots = ["8:00 am","8:30 am","9:00 am","9:30 am","10:00 am","10:30 am","11:00 am","11:30 am",
                       "12:00 pm","12:30 pm","1:00 pm","1:30 pm","2:00 pm","2:30 pm","3:00 pm","3:30 pm","4:00 pm","4:30 pm","5:00 pm","5:30 pm",
@@ -380,6 +370,7 @@
               ...data,
               dateTimeStart: moment(data.dateTimeStart.toDate()),
               dateTimeEnd: moment(data.dateTimeEnd.toDate()),
+              dateTime: moment(data.dateTime.toDate()),
             });
             
           }
@@ -608,31 +599,11 @@
             </a>
 
           </div>
-          <div class="col d-flex flex-column p-3">
-            <div class="col d-flex justify-content-center align-items-center bg-light">
-              <!-- ${(r.customerDocId)?`<span> . . . </span>`:`<span class="font-italic font-weight-light">Live Feed is not available for walk-in customers<span>`} -->
-              <video id="videoCanvas" class="col" autoplay playsinline ></video>
-            </div> 
-            <div class="row m-0">
-              <div class="col"> 
-                <select id="videoSelect" onchange="changeDevice(this,'${r.reservationDocId}')" id="videoSelect" class="form-control form-control-sm"> 
-                  <option value="" disabled selected>Select Video Device</option>
-                  ${videoDevices.map(d=>{
-                    return `
-                      <option ${(d.deviceId == r.videoDeviceId)?`selected`:``} value="${d.deviceId}">
-                        ${d.label}
-                      </option>
-                    `
-                  }).join()}                 
-                </select>
-              </div>
-            </div>
-          </div> 
+
         </div>
       </div>
       `);
       $("#currentServiceView").html(currentView);
-      renderVideo(r);
     }
     async function loadGroomers(owner){
       var tempDocs = await firebase.firestore().collection("users").where("type", "==", "groomer")
@@ -691,159 +662,8 @@
         elasticity: elasticity
       });
     }
-    async function loadDevices(reservation){
-      videoDevices = [];
-      audioDevices = [];
-      try{
-        let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-        console.log("Permission Granted ...");
-        stream.getTracks().forEach(track => track.stop());
-        let devices = await navigator.mediaDevices.enumerateDevices();
-        devices.forEach(function(device) {
-          if(device.kind === 'videoinput') videoDevices.push(device);
-          else if(device.kind == 'audioinput') audioDevices.push(device);
-        })
-      }
-      catch(e){
-        console.error(e.message); 
-      }
-    }
-    async function renderVideo(reservation){
-      let videoCanvas = document.querySelector('#videoCanvas');
-      if(reservation.mediaStreamId){
-        let stream = mediaStreams.find(ms=>ms.id == reservation.mediaStreamId);
-        if(stream){
-          videoCanvas.srcObject = stream;
-        } 
-      }
-    }
-    function changeDevice(select, reservationDocId){
-      console.log(videoDevices);
-      console.log(audioDevices);
-      let value= $(select).val();
-      let reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
-      if( value && reservation){
-        console.log("video device id changed! : " + value);
-        let videoDevice = videoDevices.find(v=>v.deviceId == value);
-        if(videoDevice){
-          console.log("videoDevice loaded ...");
-          reservation.videoDeviceId = value;
-          let audioDevice = audioDevices.find(a=>a.groupId == videoDevice.groupId);
-          if(audioDevice){
-            console.log("audioDevice loaded ...");
-            reservation.audioDeviceId = audioDevice.deviceId;
-          }
-          else{
-            console.log(`audio device not found, resorting to 'default' ...`)
-            reservation.audioDeviceId = 'communications';
-          }
-        }
-        else {
-          console.log(`video device not found!`)
-          reservation.videoDeviceId = "";
-          reservation.audioDeviceId = "communications";
-        }
-      }
-    }
-    async function startStream(reservationDocId){
-      let reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
-      if(reservation == -1){
-        alertify.error("Reservation does not exist");
-        return false;
-      }
-      let pc = "";
-      let stream = mediaStreams.find(ms=>ms.id == reservation.mediaStreamId);
-      if(!stream){
-        try{
-          let constraint = {
-            audio: {deviceId: reservation.audioDeviceId},
-            video: {deviceId: reservation.videoDeviceId},
-          }
-          stream = await navigator.mediaDevices.getUserMedia(constraint);
-          mediaStreams.push(stream);
-          reservation.mediaStreamId = stream.id;
-        }
-        catch(e){
-          console.error(e);
-        }
-      }
-      if(stream){
-        var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
-        let iceCandidates = [];
-
-        pc = new RTCPeerConnection(configuration);
-        peerConnections.push(pc);
-        pc.addEventListener('icecandidate', async (event) => {
-          if(event.candidate == null || event.candidate === "") iceCandidates.push(null);
-          else{
-            iceCandidates.push(event.candidate.toJSON());
-          } 
-          if(event.candidate == null || event.candidate == ""){
-            await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
-              localIceCandidates: iceCandidates
-            });
-            console.log("sent: Shop ICE Candidate to truck "+reservation.reservationDocId);
-            console.log("\nReady to Connect ...\n");
-          }
-        });
-        pc.addEventListener('iceconnectionstatechange', async (event) =>{
-          var connectionState = event.target.iceConnectionState;
-
-          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
-            status: connectionState,
-          })
-          console.log("iceStateChange:"+event.target.iceConnectionState);
-          if (connectionState  === 'completed') {
-          }
-          else if (connectionState  === 'connected') {
-
-          }
-          else if (connectionState  == "failed") {
-
-          }
-        });
-        stream.getTracks().forEach(track => pc.addTrack(track, stream));
-
-        try {
-          console.log('createOffer start');
-          const desc = await pc.createOffer();
-          await pc.setLocalDescription(desc);
-          console.log(desc);
-          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
-            mediaStreamId: stream.id,
-            videoDeviceId: reservation.videoDeviceId,
-            audioDeviceId: reservation.audioDeviceId,
-            localDescription: desc.toJSON(),
-            remoteIceCandidateStatus: "pending",
-            remoteDescriptionStatus: "pending",
-            status: "new",
-          });
-          renderVideo(reservation);
-        } catch (e) {
-          console.error(`Failed to create session description: ${e.toString()}`);
-        }
-      }
-    }
-    function stopStream(reservationDocId){
-      let reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
-      if(!reservation){
-        alertify.error("Reservation Not Found ...");
-        return false;
-      }
-      let streamIndex = mediaStreams.findIndex(ms=>ms.id == reservation.mediaStreamId);
-      if(streamIndex >= 0){
-        mediaStreams[streamIndex].getTracks().forEach(track => track.stop());
-        mediaStreams.splice(streamIndex, 1);
-      }
-      try{
-        await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
-          mediaStreamId: "",
-        })
-      }
-      catch(e){
-        console.error(e.message);
-      }
-      
+    function startStream(reservationDocId){
+      window.open("/stream.html?id="+reservationDocId, reservationDocId);
     }
   </script>
 </body>

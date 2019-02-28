@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<head>
+  <!-- firebase -->
+<script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
+  <script src="/js/init.js"></script>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+  <!-- alertify -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/alertify.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/css/themes/default.css" />
+
+  <!-- datatables  -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
+  
+  <!-- Link to CSS -->
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/loading.css">
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Patrick Hand SC' rel='stylesheet'>
+  <!-- Title -->
+  <link rel="shortcut icon" href="images/pet.jpg" />
+  <title> Pet Book </title>
+  <style>
+    html, body{
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="h-100 w-100 text-center" style="background-color: black">
+    <video id="videoCanvas" class="h-100 w-100" autoplay></video>
+  </div>
+    <div id="selectContainer" style="
+      position: absolute;
+      top : 0;
+      left: 0;
+    ">
+  </div>
+
+
+  <!-- jquery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- bootstrap -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+  
+  <!-- notificaton -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.2/alertify.min.js"></script>
+
+  <!-- animation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script>
+  <!-- moment  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  
+  <script>
+
+    const param = new URLSearchParams(window.location.search);
+    const reservationDocId = param.get('id');
+
+    const userSession = JSON.parse(localStorage.getItem("user"));
+
+    var videoDevices = [];
+    var audioDevices = [];
+    var mediaStreams = [];
+    var peerConnections = [];
+    var reservations = [];
+    var reservation = "";
+    var reservationListener = ()=>{};
+    var mediaStream = "";
+    var videoSelect = $(`<select class="form-control form-control-sm"></select>`);
+    var audioSelect = $(`<select class="form-control form-control-sm"></select>`);
+
+
+    var videoCanvas = document.querySelector("#videoCanvas");
+
+    $(document).ready(async function(){
+      try{
+        let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        console.log("Permission Granted ...");
+        stream.getTracks().forEach(track => track.stop());
+        loadDevices();
+      }
+      catch(e){
+        console.error(e.message);
+      }
+      navigator.mediaDevices.ondevicechange = function(event) {
+        loadDevices();
+      }
+      loadReservations(userSession);
+      videoSelect.change(function(e){
+        let value = e.target.value;
+        if(value){
+          reservation.videoDeviceId = value;
+          renderMedia();
+        }
+      });
+      audioSelect.change(function(e){
+        let value = e.target.value;
+        if(value){
+          reservation.audioDeviceId = value;
+          renderMedia();
+        } 
+      });
+
+      $("#selectContainer").append(videoSelect);
+      $("#selectContainer").append(audioSelect);
+    });
+
+    async function loadReservations(owner){
+      reservationListener();
+      reservationListener = firebase.firestore().collection("reservations").where("petshopDocId", "==", owner.petshopDocId)
+      .onSnapshot(snapshot=>{
+        if(snapshot.docs.length){
+          reservations = [];
+          currentService = [];
+          for(let doc of snapshot.docs){
+            let data = doc.data();
+            let id = doc.id;
+            reservations.push({
+              reservationDocId: id,
+              ...data,
+              dateTimeStart: moment(data.dateTimeStart.toDate()),
+              dateTimeEnd: moment(data.dateTimeEnd.toDate()),
+              dateTime: moment(data.dateTime.toDate()),
+            });
+            
+          }
+          reservations.sort(function(a,b){
+            return b.dateTimeStart.toDate() - a.dateTimeStart.toDate();
+          });
+          console.log("loaded reservations: ", reservations);
+          if(reservation == ""){
+            reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
+          }
+        }
+      });
+    }
+    async function loadDevices(){
+      audioDevices = [];
+      videoDevices = [];
+      let devices = await navigator.mediaDevices.enumerateDevices();
+      console.log(devices)
+      devices.forEach(function(device) {
+        if(device.kind === 'videoinput' && videoDevices.findIndex(a=>a.deviceId == device.deviceId) <= -1){
+          videoDevices.push(device);
+        }
+        else if(device.kind == 'audioinput' && audioDevices.findIndex(a=>a.deviceId == device.deviceId) <= -1){
+          audioDevices.push(device);
+        }
+      })
+      videoOptions = "";
+      audioOptions = "";
+
+      videoOptions += `
+        <option value="" selected disabled>
+          Select Video Device
+        </option>`;
+      audioOptions += `
+        <option value="" selected disabled>
+          Select Audio Device
+        </option>`;
+      
+      videoDevices.forEach((vd)=>{
+        let option = `
+          <option value="${vd.deviceId}">
+            ${vd.label}
+          </option>
+        `;
+        videoOptions+= option;
+      })
+      audioDevices.forEach((vd)=>{
+        let option = `
+          <option value="${vd.deviceId}">
+            ${vd.label}
+          </option>
+        `;
+        // if(reservations.findIndex(r=> r.isStreaming == true && r.videoDeviceId == vd.deviceId ) > -1){
+        //   option.prop("disabled", true);
+        // }
+        audioOptions += option;
+      })
+      videoSelect.html(videoOptions);
+      audioSelect.html(audioOptions);
+      if(reservation.isStreaming && videoDevices.findIndex(vd=>deviceId == reservation.videoDeviceId) > -1){
+
+      }
+    }
+    async function createConnection(){
+      if(mediaStream.active){
+        var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+        let iceCandidates = [];
+
+        pc = new RTCPeerConnection(configuration);
+        peerConnections.push(pc);
+        pc.addEventListener('icecandidate', async (event) => {
+          if(event.candidate == null || event.candidate === "") iceCandidates.push(null);
+          else{
+            iceCandidates.push(event.candidate.toJSON());
+          } 
+          if(event.candidate == null || event.candidate == ""){
+            await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+              localIceCandidates: iceCandidates
+            });
+            console.log("sent: Shop ICE Candidate to truck "+reservation.reservationDocId);
+            console.log("\nReady to Connect ...\n");
+          }
+        });
+        pc.addEventListener('iceconnectionstatechange', async (event) =>{
+          var connectionState = event.target.iceConnectionState;
+
+          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+            status: connectionState,
+          })
+          console.log("iceStateChange:"+event.target.iceConnectionState);
+          if (connectionState  === 'completed') {
+          }
+          else if (connectionState  === 'connected') {
+
+          }
+          else if (connectionState  == "failed") {
+
+          }
+        });
+        mediaStream.getTracks().forEach(track => pc.addTrack(track, mediaStream));
+
+        try {
+          console.log('createOffer start');
+          const desc = await pc.createOffer();
+          await pc.setLocalDescription(desc);
+          console.log(desc);
+          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+            mediaStreamId: mediaStream.id,
+            videoDeviceId: reservation.videoDeviceId,
+            audioDeviceId: reservation.audioDeviceId,
+            localDescription: desc.toJSON(),
+            remoteIceCandidateStatus: "pending",
+            remoteDescriptionStatus: "pending",
+            status: "new",
+          });
+        } catch (e) {
+          console.error(`Failed to create session description: ${e.toString()}`);
+        }
+      }
+    }
+    async function stopStream(){
+      if(mediaStream != ""){
+        mediaStream.getTracks().forEach(track => track.stop());
+      }
+      try{
+        await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+          mediaStreamId: "",
+          isStreaming: false,
+        })
+      }
+      catch(e){
+        console.error(e.message);
+      }
+    }
+    async function renderMedia(){
+      try{
+        let constraint = {}
+        let vId = reservation.videoDeviceId;
+        let aId = reservation.audioDeviceId;
+        if(vId && videoDevices.findIndex(vd=>vd.deviceId == vId) > -1)constraint.video = {deviceId: vId}
+        if(aId && audioDevices.findIndex(ad=>ad.deviceId == aId) > -1)constraint.audio = {deviceId: aId}
+        mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
+        videoCanvas.srcObject = mediaStream;
+      }
+      catch(e){console.error(e.message)}
+    }
+  </script>
+  
+</body>
+</html>
