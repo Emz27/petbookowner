@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <head>
@@ -62,7 +63,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   
   <script>
-
     const param = new URLSearchParams(window.location.search);
     const reservationDocId = param.get('id');
 
@@ -71,79 +71,63 @@
     var videoDevices = [];
     var audioDevices = [];
     var mediaStreams = [];
-    var peerConnections = [];
     var reservations = [];
     var reservation = "";
     var reservationListener = ()=>{};
     var mediaStream = "";
     var videoSelect = $(`<select class="form-control form-control-sm"></select>`);
     var audioSelect = $(`<select class="form-control form-control-sm"></select>`);
+    var reservationRef = {};
+    var connections = [];
 
 
     var videoCanvas = document.querySelector("#videoCanvas");
 
     $(document).ready(async function(){
-      try{
-        let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-        console.log("Permission Granted ...");
-        stream.getTracks().forEach(track => track.stop());
-        loadDevices();
-      }
-      catch(e){
-        console.error(e.message);
-      }
-      navigator.mediaDevices.ondevicechange = function(event) {
-        loadDevices();
-      }
-      loadReservations(userSession);
-      videoSelect.change(function(e){
-        let value = e.target.value;
-        if(value){
-          reservation.videoDeviceId = value;
-          renderMedia();
+      if(reservationDocId){
+        let result = await firebase.firestore().doc('reservations/'+reservationDocId).get();
+        if(!result.exists)return alertify.error("Reservation does not exists");
+        reservation = {
+          ...result.data(),
+          reservationDocId: result.id,
         }
-      });
-      audioSelect.change(function(e){
-        let value = e.target.value;
-        if(value){
-          reservation.audioDeviceId = value;
-          renderMedia();
-        } 
-      });
+        reservationRef = firebase.firestore().doc('reservations/'+reservationDocId);
 
-      $("#selectContainer").append(videoSelect);
-      $("#selectContainer").append(audioSelect);
+        if(await isStreaming()) return alertify.error("Someone is already streaming this service");
+
+        console.log(reservationRef);
+        try{
+          let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          console.log("Permission Granted ...");
+          stream.getTracks().forEach(track => track.stop());
+          loadDevices();
+        }
+        catch(e){
+          return console.error(e.message);
+        }
+        navigator.mediaDevices.ondevicechange = function(event) {
+          loadDevices();
+        }
+        videoSelect.change(function(e){
+          let value = e.target.value;
+          if(value){
+            reservation.videoDeviceId = value;
+            renderMedia();
+          }
+        });
+        audioSelect.change(function(e){
+          let value = e.target.value;
+          if(value){
+            reservation.audioDeviceId = value;
+            renderMedia();
+          } 
+        });
+      }
+      else{
+      }
+      $("#selectContainer").html("").append(videoSelect).append(audioSelect);
     });
 
-    async function loadReservations(owner){
-      reservationListener();
-      reservationListener = firebase.firestore().collection("reservations").where("petshopDocId", "==", owner.petshopDocId)
-      .onSnapshot(snapshot=>{
-        if(snapshot.docs.length){
-          reservations = [];
-          currentService = [];
-          for(let doc of snapshot.docs){
-            let data = doc.data();
-            let id = doc.id;
-            reservations.push({
-              reservationDocId: id,
-              ...data,
-              dateTimeStart: moment(data.dateTimeStart.toDate()),
-              dateTimeEnd: moment(data.dateTimeEnd.toDate()),
-              dateTime: moment(data.dateTime.toDate()),
-            });
-            
-          }
-          reservations.sort(function(a,b){
-            return b.dateTimeStart.toDate() - a.dateTimeStart.toDate();
-          });
-          console.log("loaded reservations: ", reservations);
-          if(reservation == ""){
-            reservation = reservations.find(r=>r.reservationDocId == reservationDocId);
-          }
-        }
-      });
-    }
     async function loadDevices(){
       audioDevices = [];
       videoDevices = [];
@@ -157,79 +141,78 @@
           audioDevices.push(device);
         }
       })
-      videoOptions = "";
-      audioOptions = "";
-
-      videoOptions += `
+      videoSelect.html(`
         <option value="" selected disabled>
           Select Video Device
-        </option>`;
-      audioOptions += `
+        </option>`);
+      audioSelect.html(`
         <option value="" selected disabled>
           Select Audio Device
-        </option>`;
+        </option>`);
       
       videoDevices.forEach((vd)=>{
-        let option = `
+        let option = $(`
           <option value="${vd.deviceId}">
             ${vd.label}
           </option>
-        `;
-        videoOptions+= option;
+        `);
+        if( videoDevices.findIndex(vd=>vd.deviceId == reservation.videoDeviceId) > -1){
+          option.prop("selected", true);
+        }
+        videoSelect.append(option);
       })
       audioDevices.forEach((vd)=>{
-        let option = `
+        let option = $(`
           <option value="${vd.deviceId}">
             ${vd.label}
           </option>
-        `;
-        // if(reservations.findIndex(r=> r.isStreaming == true && r.videoDeviceId == vd.deviceId ) > -1){
-        //   option.prop("disabled", true);
-        // }
-        audioOptions += option;
-      })
-      videoSelect.html(videoOptions);
-      audioSelect.html(audioOptions);
-      if(reservation.isStreaming && videoDevices.findIndex(vd=>deviceId == reservation.videoDeviceId) > -1){
-
-      }
+        `);
+        if( audioDevices.findIndex(vd=>vd.deviceId == reservation.audioDeviceId) > -1){
+          option.prop("selected", true);
+        }
+        audioSelect.append(option);
+      });
+      renderMedia();
     }
     async function createConnection(){
       if(mediaStream.active){
         var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
         let iceCandidates = [];
 
+        var connectionRef = await firebase.firestore().collection("reservations").doc(reservationDocId).collection("connections").doc();
         pc = new RTCPeerConnection(configuration);
-        peerConnections.push(pc);
         pc.addEventListener('icecandidate', async (event) => {
           if(event.candidate == null || event.candidate === "") iceCandidates.push(null);
           else{
             iceCandidates.push(event.candidate.toJSON());
           } 
           if(event.candidate == null || event.candidate == ""){
-            await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+            await connectionRef.update({
               localIceCandidates: iceCandidates
             });
-            console.log("sent: Shop ICE Candidate to truck "+reservation.reservationDocId);
+            console.log("sent: Shop ICE Candidate to "+reservation.reservationDocId);
             console.log("\nReady to Connect ...\n");
           }
         });
         pc.addEventListener('iceconnectionstatechange', async (event) =>{
           var connectionState = event.target.iceConnectionState;
 
-          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
+          await connectionRef.update({
             status: connectionState,
           })
           console.log("iceStateChange:"+event.target.iceConnectionState);
           if (connectionState  === 'completed') {
+            await createConnection();
           }
           else if (connectionState  === 'connected') {
 
           }
           else if (connectionState  == "failed") {
-
+            await deleteConnection(connection.connectionDocId);
+            await createConnection();
           }
         });
+
         mediaStream.getTracks().forEach(track => pc.addTrack(track, mediaStream));
 
         try {
@@ -237,32 +220,26 @@
           const desc = await pc.createOffer();
           await pc.setLocalDescription(desc);
           console.log(desc);
-          await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
-            mediaStreamId: mediaStream.id,
-            videoDeviceId: reservation.videoDeviceId,
-            audioDeviceId: reservation.audioDeviceId,
+          await connectionRef.set({
             localDescription: desc.toJSON(),
             remoteIceCandidateStatus: "pending",
             remoteDescriptionStatus: "pending",
             status: "new",
           });
+          await reservationRef.update({
+            mediaStreamId: mediaStream.id,
+            videoDeviceId: reservation.videoDeviceId,
+            audioDeviceId: reservation.audioDeviceId,
+          });
+          let connection = {
+            peerConnection: pc,
+            connectionDocId: connectionRef.id,
+          };
+          console.log(connection);
+          connections.push(connection);
         } catch (e) {
           console.error(`Failed to create session description: ${e.toString()}`);
         }
-      }
-    }
-    async function stopStream(){
-      if(mediaStream != ""){
-        mediaStream.getTracks().forEach(track => track.stop());
-      }
-      try{
-        await firebase.firestore().collection("reservations").doc(reservation.reservationDocId).update({
-          mediaStreamId: "",
-          isStreaming: false,
-        })
-      }
-      catch(e){
-        console.error(e.message);
       }
     }
     async function renderMedia(){
@@ -274,8 +251,73 @@
         if(aId && audioDevices.findIndex(ad=>ad.deviceId == aId) > -1)constraint.audio = {deviceId: aId}
         mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
         videoCanvas.srcObject = mediaStream;
+        if(constraint.video && constraint.audio && await isStreaming() == false){
+          await setOnline();
+          await createConnection();
+          await createConnection();
+        }
       }
       catch(e){console.error(e.message)}
+    }
+    async function setOnline(){
+      var reservationDatabaseRef = firebase.database().ref('/stream/' + reservationDocId);
+      var isOfflineForDatabase = {
+          state: 'offline',
+          last_changed: firebase.database.ServerValue.TIMESTAMP,
+      };
+      var isOnlineForDatabase = {
+          state: 'online',
+          last_changed: firebase.database.ServerValue.TIMESTAMP,
+      };
+      firebase.database().ref('.info/connected').on('value', function(snapshot) {
+          if (snapshot.val() == false) {
+              return;
+          };
+          reservationDatabaseRef.onDisconnect().set(isOfflineForDatabase).then(function() {
+            reservationDatabaseRef.set(isOnlineForDatabase);
+          });
+      });
+    }
+    async function isStreaming(){
+      let result = await reservationRef.collection("connections").get();
+      console.log(result.docs.length);
+      return (result.docs.length > 0)?true:false;
+    }
+    async function deleteAllConnections(){
+      console.log("closing all connections");
+      try{
+        let result = await reservationRef.collection("connections").get();
+        if(result.docs.length > 0){
+          let batch = firebase.firestore().batch();
+          for(let doc of result.docs){
+            batch.delete(reservationRef.collection("connections").doc(doc.id));
+          }
+          batch.commit();
+        }
+      }
+      catch(e){console.error(e.message)}
+      for(let conn of connections){
+        conn.peerConnection.close();
+      }
+      connections = [];
+    }
+    async function deleteConnection(connectionDocId){
+      let connectionIndex = connections.findIndex(c=>c.connectionDocId == connectionDocId);
+      if(connectionIndex > -1){
+        try{
+          await reservationRef.collection("connections").doc(connectionDocId).delete();
+          connection.splice(connectionIndex, 1);
+        }
+        catch(e){
+          console.error(e.message)
+          return false;
+        }
+        return true;
+      }
+      else{
+        console.error(`conenction ${connectionDocId} does not exists`);
+        return false;
+      } 
     }
   </script>
   
