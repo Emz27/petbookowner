@@ -232,7 +232,8 @@
           });
           batch.set(petshopRef, {
             petshopName: comp_name,
-            address: address,
+            address: formatted_address,
+            location: loc,
             status: "inactive", 
             ownerDocId: userRef.id,
             ownerFirstname: fname,
