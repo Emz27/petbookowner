@@ -72,8 +72,24 @@
           { data: "contact", title: "Contact Number"},
           { data: "status", title: "Status"},
           { data: function(row){
-            if(row.status == "active") return `<td><button onclick="deactivateOwner('${row.userDocId}','${row.petshopDocId}');" class="btn btn-outline-secondary btn-block">Deactivate</button></td>`
-            else return `<td><button onclick="activateOwner('${row.userDocId}','${row.petshopDocId}');" class="btn btn-outline-primary btn-block">Activate</button></td>`
+            if(row.status == "active"){
+              return `
+              <td>
+                <div class="btn-group" role="group">
+                  <button onclick="deactivateOwner('${row.userDocId}','${row.petshopDocId}');" class="btn btn-secondary">Deactivate</button>
+                  <button onclick="deleteShop('${row.petshopDocId}');" class="btn btn-secondary">Delete</button>
+                </div>
+              </td>`
+            } 
+            else{
+              return `
+              <td>
+                <div class="btn-group" role="group">
+                  <button onclick="activateOwner('${row.userDocId}','${row.petshopDocId}');" class="btn btn-secondary">Activate</button>
+                  <button onclick="deleteShop('${row.petshopDocId}');" class="btn btn-secondary">Delete</button>
+                </div>
+              </td>`
+            }
           }, title: "Action"},
         ]
       });
@@ -113,6 +129,52 @@
         batch.commit()
       }
       catch(e){console.log(e)}
+    }
+    function deleteShop(petshopDocId){
+      alertify.confirm("Delete Owner","Press Ok to delete the owner",
+      async function(){
+        try{
+          let petshopDoc = await firebase.firestore().collection("petshops").doc(petshopDocId).get();
+          let data = petshopDoc.data();
+          let batch = firebase.firestore().batch();
+
+          let users = await firebase.firestore().collection("users").where("petshopDocId", "==", petshopDocId).get();
+          for(let user of users.docs){
+            batch.delete(firebase.firestore().collection("users").doc(user.id));
+          }
+
+          let services = await firebase.firestore().collection("services").where("petshopDocId", "==", petshopDocId).get();
+          for(service of services.docs){
+            for( let image of service.data().images){
+              try{
+                await firebase.storage().ref().child("services/"+service.id+"/"+image).delete();
+              }
+              catch(e){console.error(e.message)}
+            }
+            batch.delete(firebase.firestore().collection("services").doc(service.id));
+          }
+
+          let reservations = await firebase.firestore().collection("reservations").where("petshopDocId", "==", petshopDocId).get();
+          for(let reservation of reservations.docs){
+            let connections = await firebase.firestore().collection("reservations").doc(reservation.id).collection("connections").get();
+            for(let conn of connections.docs){
+              batch.delete(firebase.firestore().collection("reservations").doc(reservation.id).collection("connections").doc(conn.id));
+            }
+            batch.delete(firebase.firestore().collection("reservations").doc(reservation.id));
+          }
+          batch.delete(firebase.firestore().collection("petshops").doc(petshopDocId));
+          
+          await batch.commit(); 
+
+          alertify.success('Petshop Owner Deleted');
+        }
+        catch(e){
+          alertify.error('Deletion Failed');
+          console.log(e)
+        }
+      },
+      async function(){
+      });
     }
   </script>
 </body>

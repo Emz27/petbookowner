@@ -138,9 +138,23 @@
           let serviceDoc = await firebase.firestore().collection("services").doc(serviceDocId).get();
           let data = serviceDoc.data();
           for( let image of data.images){
-            firebase.storage().ref().child("services/"+serviceDocId+"/"+image.name).delete();
+            try{
+              await firebase.storage().ref().child("services/"+serviceDocId+"/"+image).delete();
+            }
+            catch(e){console.error(e.message)}
           }
-          await firebase.firestore().collection("services").doc(serviceDocId).delete();
+          let batch = firebase.firestore().batch();
+          let reservations = await firebase.firestore().collection("reservations").where("serviceDocId", "==", serviceDocId).get();
+          for(let reservation of reservations.docs){
+            let connections = await firebase.firestore().collection("reservations").doc(reservation.id).collection("connections").get();
+            for(let conn of connections.docs){
+              batch.delete(firebase.firestore().collection("reservations").doc(reservation.id).collection("connections").doc(conn.id));
+            }
+            batch.delete(firebase.firestore().collection("reservations").doc(reservation.id));
+          }
+          batch.delete(firebase.firestore().collection("services").doc(serviceDocId))
+          await batch.commit(); 
+          
           alertify.success('Service Deleted');
         }
         catch(e){

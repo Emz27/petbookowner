@@ -132,7 +132,15 @@
       alertify.confirm("Delete Groomer","Press Ok to delete a groomer",
       async function(){
         try{
-          await firebase.firestore().collection("users").doc(userDocId).delete();
+          let batch = firebase.firestore().batch();
+          batch.delete(firebase.firestore().collection("users").doc(userDocId));
+
+          let reservations = await firebase.firestore().collection("reservations").where("groomerDocId", "==", userDocId).get()
+          for(let reservation of reservations.docs){
+            batch.delete(firebase.firestore().collection("reservations").doc(reservation.id));
+          }
+          await batch.commit();
+
           alertify.success('Groomer Deleted');
         }
         catch(e){
