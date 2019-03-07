@@ -188,7 +188,8 @@
           } 
           if(event.candidate == null || event.candidate == ""){
             await connectionRef.update({
-              localIceCandidates: iceCandidates
+              localIceCandidates: iceCandidates,
+              localIceCandidateStatus: "sent",
             });
             console.log("sent: Shop ICE Candidate to "+reservation.reservationDocId);
             console.log("\nReady to Connect ...\n");
@@ -222,8 +223,11 @@
           console.log(desc);
           await connectionRef.set({
             localDescription: desc.toJSON(),
+            localDescriptionStatus: "sent",
+            localIceCandidateStatus: "pending",
             remoteIceCandidateStatus: "pending",
             remoteDescriptionStatus: "pending",
+            isAvailable: true,
             status: "new",
           });
           await reservationRef.update({
@@ -231,9 +235,46 @@
             videoDeviceId: reservation.videoDeviceId,
             audioDeviceId: reservation.audioDeviceId,
           });
+
+          let connectionListener = connectionRef.onSnapshot(async (doc)=>{
+              console.log("\nreceived data from server...\n");
+              var data = doc.data();
+              var ic = data.remoteIceCandidates;
+              if(data.remoteDescriptionStatus == "sent"){
+                var connectionState = pc.iceConnectionState;
+                try{
+                  if(connectionState == "new"){
+                    await pc.setRemoteDescription(new RTCSessionDescription(data.remoteDescription));
+                    await connectionRef.update({remoteDescriptionStatus: "received" });              
+                    console.log("received: Remote Session Description");
+                  }
+                  console.log("set remote description blocked: ice connection state - "+pc.iceConnectionState);
+
+                }
+                catch(e){console.error(e.message)}
+              }
+              if(data.remoteIceCandidateStatus == "sent" && data.remoteDescriptionStatus == "received"){
+
+                for( let c of ic ){
+                  if(c != null && c !== ""){
+                    try{
+                      console.log(c)
+                      await pc.addIceCandidate(new RTCIceCandidate(c));
+                    }
+                    catch(e){
+                      console.error(e.message);
+                    }
+                  }
+                }
+                console.log("received: Remote ICE Candidates");
+                await connectionRef.update({ remoteIceCandidateStatus: "received" });
+              }
+          });
+
           let connection = {
             peerConnection: pc,
             connectionDocId: connectionRef.id,
+            connectionListener: connectionListener,
           };
           console.log(connection);
           connections.push(connection);
