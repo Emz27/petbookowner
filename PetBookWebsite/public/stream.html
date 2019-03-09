@@ -69,14 +69,12 @@
     const userSession = JSON.parse(localStorage.getItem("user"));
 
     var videoDevices = [];
-    var audioDevices = [];
     var mediaStreams = [];
     var reservations = [];
     var reservation = "";
     var reservationListener = ()=>{};
     var mediaStream = "";
     var videoSelect = $(`<select class="form-control form-control-sm"></select>`);
-    var audioSelect = $(`<select class="form-control form-control-sm"></select>`);
     var reservationRef = {};
     var connections = [];
 
@@ -97,7 +95,7 @@
 
         console.log(reservationRef);
         try{
-          let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          let stream = await navigator.mediaDevices.getUserMedia({ video: true });
           console.log("Permission Granted ...");
           stream.getTracks().forEach(track => track.stop());
           loadDevices();
@@ -115,21 +113,13 @@
             renderMedia();
           }
         });
-        audioSelect.change(function(e){
-          let value = e.target.value;
-          if(value){
-            reservation.audioDeviceId = value;
-            renderMedia();
-          } 
-        });
       }
       else{
       }
-      $("#selectContainer").html("").append(videoSelect).append(audioSelect);
+      $("#selectContainer").html("").append(videoSelect)
     });
 
     async function loadDevices(){
-      audioDevices = [];
       videoDevices = [];
       let devices = await navigator.mediaDevices.enumerateDevices();
       console.log(devices)
@@ -137,17 +127,10 @@
         if(device.kind === 'videoinput' && videoDevices.findIndex(a=>a.deviceId == device.deviceId) <= -1){
           videoDevices.push(device);
         }
-        else if(device.kind == 'audioinput' && audioDevices.findIndex(a=>a.deviceId == device.deviceId) <= -1){
-          audioDevices.push(device);
-        }
       })
       videoSelect.html(`
         <option value="" selected disabled>
           Select Video Device
-        </option>`);
-      audioSelect.html(`
-        <option value="" selected disabled>
-          Select Audio Device
         </option>`);
       
       videoDevices.forEach((vd)=>{
@@ -161,20 +144,10 @@
         }
         videoSelect.append(option);
       })
-      audioDevices.forEach((vd)=>{
-        let option = $(`
-          <option value="${vd.deviceId}">
-            ${vd.label}
-          </option>
-        `);
-        if( audioDevices.findIndex(vd=>vd.deviceId == reservation.audioDeviceId) > -1){
-          option.prop("selected", true);
-        }
-        audioSelect.append(option);
-      });
       renderMedia();
     }
     async function createConnection(){
+      var connection = {};
       if(mediaStream.active){
         var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
         let iceCandidates = [];
@@ -233,7 +206,6 @@
           await reservationRef.update({
             mediaStreamId: mediaStream.id,
             videoDeviceId: reservation.videoDeviceId,
-            audioDeviceId: reservation.audioDeviceId,
           });
 
           let connectionListener = connectionRef.onSnapshot(async (doc)=>{
@@ -271,7 +243,7 @@
               }
           });
 
-          let connection = {
+          connection = {
             peerConnection: pc,
             connectionDocId: connectionRef.id,
             connectionListener: connectionListener,
@@ -287,12 +259,10 @@
       try{
         let constraint = {}
         let vId = reservation.videoDeviceId;
-        let aId = reservation.audioDeviceId;
         if(vId && videoDevices.findIndex(vd=>vd.deviceId == vId) > -1)constraint.video = {deviceId: vId}
-        if(aId && audioDevices.findIndex(ad=>ad.deviceId == aId) > -1)constraint.audio = {deviceId: aId}
         mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
         videoCanvas.srcObject = mediaStream;
-        if(constraint.video && constraint.audio && await isStreaming() == false){
+        if(constraint.video && await isStreaming() == false){
           await setOnline();
           await createConnection();
           await createConnection();
