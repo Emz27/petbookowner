@@ -22,6 +22,14 @@ exports.onStreamStatusChanged = functions.database.ref('/stream/{uid}').onUpdate
 
         if(connections.docs.length){
           for(let doc of connections.docs){
+            let localIceCandidates = await reservationRef.collection("connections").doc(doc.id).collection("localIceCandidates").get();
+            let remoteIceCandidates = await reservationRef.collection("connections").doc(doc.id).collection("remoteIceCandidates").get();
+            for(let ice of localIceCandidates.docs){
+              batch.delete(reservationRef.collection("connections").doc(doc.id).collection("localIceCandidates").doc(ice.id))
+            }
+            for(let ice of remoteIceCandidates.docs){
+              batch.delete(reservationRef.collection("connections").doc(doc.id).collection("remoteIceCandidates").doc(ice.id))
+            }
             batch.delete(reservationRef.collection("connections").doc(doc.id));
           }
         }

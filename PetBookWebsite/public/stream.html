@@ -63,6 +63,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   
   <script>
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
     const param = new URLSearchParams(window.location.search);
     const reservationDocId = param.get('id');
 
@@ -148,6 +152,8 @@
     }
     async function createConnection(){
       var connection = {};
+      var iceCandidateListener = ()=>{}
+      var connectionListener = ()=>{}
       if(mediaStream.active){
         var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
         let iceCandidates = [];
@@ -157,11 +163,15 @@
         pc.addEventListener('icecandidate', async (event) => {
           if(event.candidate == null || event.candidate === "") iceCandidates.push(null);
           else{
-            iceCandidates.push(event.candidate.toJSON());
+            let ice = new RTCIceCandidate(event.candidate);
+            iceCandidates.push(ice.toJSON());
+            connectionRef.collection("localIceCandidates").add({
+              ice: ice.toJSON(),
+              status: "sent",
+            })
           } 
           if(event.candidate == null || event.candidate == ""){
             await connectionRef.update({
-              localIceCandidates: iceCandidates,
               localIceCandidateStatus: "sent",
             });
             console.log("sent: Shop ICE Candidate to "+reservation.reservationDocId);
@@ -176,6 +186,7 @@
           })
           console.log("iceStateChange:"+event.target.iceConnectionState);
           if (connectionState  === 'completed') {
+            iceCandidateListener();
             await createConnection();
           }
           else if (connectionState  === 'connected') {
@@ -197,8 +208,6 @@
           await connectionRef.set({
             localDescription: desc.toJSON(),
             localDescriptionStatus: "sent",
-            localIceCandidateStatus: "pending",
-            remoteIceCandidateStatus: "pending",
             remoteDescriptionStatus: "pending",
             isAvailable: true,
             status: "new",
@@ -207,39 +216,33 @@
             mediaStreamId: mediaStream.id,
             videoDeviceId: reservation.videoDeviceId,
           });
-
-          let connectionListener = connectionRef.onSnapshot(async (doc)=>{
-              console.log("\nreceived data from server...\n");
+          
+          connectionListener = connectionRef.onSnapshot(async (doc)=>{
               var data = doc.data();
-              var ic = data.remoteIceCandidates;
-              if(data.remoteDescriptionStatus == "sent"){
+              if(data && data.remoteDescriptionStatus == "sent"){
                 var connectionState = pc.iceConnectionState;
                 try{
-                  if(connectionState == "new"){
-                    await pc.setRemoteDescription(new RTCSessionDescription(data.remoteDescription));
-                    await connectionRef.update({remoteDescriptionStatus: "received" });              
-                    console.log("received: Remote Session Description");
-                  }
-                  console.log("set remote description blocked: ice connection state - "+pc.iceConnectionState);
-
+                  await pc.setRemoteDescription(new RTCSessionDescription(data.remoteDescription));
+                  await connectionRef.update({remoteDescriptionStatus: "received" });              
+                  console.log("received: Remote Session Description");
+                  iceCandidateListener = connectionRef.collection("remoteIceCandidates")
+                    .where("status", "==", "sent")
+                    .onSnapshot(async (snapshot)=>{
+                      try{
+                        let batch = firebase.firestore().batch();
+                        for(let doc of snapshot.docs){
+                          let ice = doc.data().ice;
+                          let status = doc.data().status;
+                          console.log(ice)
+                          await pc.addIceCandidate(ice);
+                          batch.update( connectionRef.collection("remoteIceCandidates").doc(doc.id), {status: "received"})
+                        }
+                        batch.commit();
+                      }
+                      catch(e){console.error(e )}
+                    })
                 }
                 catch(e){console.error(e.message)}
-              }
-              if(data.remoteIceCandidateStatus == "sent" && data.remoteDescriptionStatus == "received"){
-
-                for( let c of ic ){
-                  if(c != null && c !== ""){
-                    try{
-                      console.log(c)
-                      await pc.addIceCandidate(new RTCIceCandidate(c));
-                    }
-                    catch(e){
-                      console.error(e.message);
-                    }
-                  }
-                }
-                console.log("received: Remote ICE Candidates");
-                await connectionRef.update({ remoteIceCandidateStatus: "received" });
               }
           });
 
@@ -247,6 +250,7 @@
             peerConnection: pc,
             connectionDocId: connectionRef.id,
             connectionListener: connectionListener,
+            iceCandidateListener: iceCandidateListener,
           };
           console.log(connection);
           connections.push(connection);
@@ -317,7 +321,7 @@
       if(connectionIndex > -1){
         try{
           await reservationRef.collection("connections").doc(connectionDocId).delete();
-          connection.splice(connectionIndex, 1);
+          connections.splice(connectionIndex, 1);
         }
         catch(e){
           console.error(e.message)
