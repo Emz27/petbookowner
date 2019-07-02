@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li id="userLink" class="nav-item">
-          <a class="nav-link" href="/admin/index.html">Users <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/admin/index.html">Shop Branches <span class="sr-only">(current)</span></a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
